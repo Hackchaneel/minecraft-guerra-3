@@ -120,8 +120,8 @@ export default function IslandAssignmentRoulette() {
           <div
             className={'assignment-map' + (spotlightRegionId ? ' is-spotlight' : '')}
             style={spotlightRegionId ? {
-              '--focus-x': `${regions.find((region) => region.id === spotlightRegionId)?.x ?? 50}%`,
-              '--focus-y': `${regions.find((region) => region.id === spotlightRegionId)?.y ?? 50}%`,
+              '--pan-x': `calc(50% - ${(regions.find((region) => region.id === spotlightRegionId)?.x ?? 50) * 1.6}%)`,
+              '--pan-y': `calc(50% - ${(regions.find((region) => region.id === spotlightRegionId)?.y ?? 50) * 1.6}%)`,
             } : undefined}
           >
           <img src="./mapa-roleta.png" alt="Mapa do Arquipélago Voxel com os nomes das ilhas" draggable="false" />
