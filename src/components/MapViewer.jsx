@@ -11,8 +11,10 @@ export default function MapViewer() {
   const [strokes, setStrokes] = useState([])
   const drag = useRef(null)
   const viewport = useRef(null)
+  const mapImage = useRef(null)
   const canvas = useRef(null)
   const drawingPointer = useRef(null)
+  const activeStroke = useRef(null)
   const zoom = (d) => setT((p) => ({ ...p, s: Math.min(4, Math.max(0.6, p.s + d)) }))
   const focusRegion = (region) => {
     setSel(region)
@@ -39,7 +41,10 @@ export default function MapViewer() {
       context.lineJoin = 'round'
       context.beginPath()
       context.moveTo(stroke.points[0].x, stroke.points[0].y)
-      for (const point of stroke.points.slice(1)) context.lineTo(point.x, point.y)
+      for (let index = 1; index < stroke.points.length; index += 1) {
+        const point = stroke.points[index]
+        context.lineTo(point.x, point.y)
+      }
       if (stroke.points.length === 1) context.lineTo(stroke.points[0].x + 0.1, stroke.points[0].y + 0.1)
       context.stroke()
     }
@@ -59,28 +64,46 @@ export default function MapViewer() {
     drawingPointer.current = event.pointerId
     event.currentTarget.setPointerCapture(event.pointerId)
     const point = drawingPoint(event)
-    setStrokes((current) => [...current, { tool: drawTool, points: [point] }])
+    activeStroke.current = { tool: drawTool, points: [point] }
+    const context = canvas.current?.getContext('2d')
+    if (!context) return
+    context.globalCompositeOperation = drawTool === 'eraser' ? 'destination-out' : 'source-over'
+    context.strokeStyle = '#ff8a2b'
+    context.lineWidth = drawTool === 'eraser' ? 38 : 8
+    context.lineCap = 'round'
+    context.lineJoin = 'round'
+    context.beginPath()
+    context.moveTo(point.x, point.y)
+    context.lineTo(point.x + 0.1, point.y + 0.1)
+    context.stroke()
   }
   const continueDrawing = (event) => {
-    if (drawTool === 'pan') return
     event.stopPropagation()
     if (drawingPointer.current !== event.pointerId) return
     const point = drawingPoint(event)
-    setStrokes((current) => {
-      if (!current.length) return current
-      const next = [...current]
-      const lastIndex = next.length - 1
-      const last = next[lastIndex]
-      next[lastIndex] = { ...last, points: [...last.points, point] }
-      return next
-    })
+    const stroke = activeStroke.current
+    const context = canvas.current?.getContext('2d')
+    if (!stroke || !context) return
+    stroke.points.push(point)
+    context.lineTo(point.x, point.y)
+    context.stroke()
   }
   const stopDrawing = (event) => {
-    if (drawTool === 'pan') return
     event.stopPropagation()
     if (drawingPointer.current !== event.pointerId) return
     drawingPointer.current = null
+    const stroke = activeStroke.current
+    activeStroke.current = null
+    if (stroke) setStrokes((current) => [...current, stroke])
+    if (canvas.current) canvas.current.getContext('2d').globalCompositeOperation = 'source-over'
     if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId)
+  }
+  const finishDrag = () => {
+    const currentDrag = drag.current
+    if (!currentDrag) return
+    drag.current = null
+    mapImage.current?.classList.remove('is-dragging')
+    setT((current) => ({ ...current, x: currentDrag.lastX, y: currentDrag.lastY }))
   }
   return (<>
     <div className="row"><button className={`btn ${mode === 'names' ? 'primary' : ''}`} onClick={() => setMode('names')}>MAPA COM NOMES</button><button className={`btn ${mode === 'art' ? 'primary' : ''}`} onClick={() => setMode('art')}>MAPA ILUSTRADO</button></div>
@@ -94,16 +117,16 @@ export default function MapViewer() {
     <div className="mapbox">
       <div className="viewport" ref={viewport}
         onWheel={(e) => zoom(e.deltaY < 0 ? 0.15 : -0.15)}
-        onPointerDown={(e) => { drag.current = { x: e.clientX - t.x, y: e.clientY - t.y } }}
+        onPointerDown={(e) => { drag.current = { pointerId: e.pointerId, startX: e.clientX, startY: e.clientY, originX: t.x, originY: t.y, lastX: t.x, lastY: t.y }; mapImage.current?.classList.add('is-dragging') }}
         onPointerMove={(e) => {
           const start = drag.current
-          if (!start) return
-          const x = e.clientX - start.x
-          const y = e.clientY - start.y
-          setT((p) => ({ ...p, x, y }))
+          if (!start || start.pointerId !== e.pointerId) return
+          start.lastX = start.originX + e.clientX - start.startX
+          start.lastY = start.originY + e.clientY - start.startY
+          if (mapImage.current) mapImage.current.style.transform = `translate(${start.lastX}px,${start.lastY}px) scale(${t.s})`
         }}
-        onPointerUp={() => (drag.current = null)} onPointerLeave={() => (drag.current = null)}>
-        <div className="mapimg" style={{ transform: `translate(${t.x}px,${t.y}px) scale(${t.s})`, '--s': t.s }}>
+        onPointerUp={finishDrag} onPointerCancel={finishDrag} onPointerLeave={finishDrag}>
+        <div ref={mapImage} className="mapimg" style={{ transform: `translate(${t.x}px,${t.y}px) scale(${t.s})`, '--s': t.s }}>
           <img src={maps[mode][1]} alt={maps[mode][0]} draggable={false} style={{ objectFit: mode === 'art' ? 'contain' : 'fill' }} />
           {mode === 'art' && <canvas ref={canvas} className={`draw-canvas ${drawTool === 'pan' ? 'pan' : ''}`} width={CANVAS_WIDTH} height={CANVAS_HEIGHT} aria-label="Área para desenhar no mapa" onPointerDown={startDrawing} onPointerMove={continueDrawing} onPointerUp={stopDrawing} onPointerCancel={stopDrawing} />}
           {mode === 'names' && regions.map((r) => (
