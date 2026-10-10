@@ -17,6 +17,26 @@ const ISLAND_COLORS = {
   'Maçã Radiativa': '#f4d000',
 }
 const DARK_LABEL_ISLANDS = new Set(['Prepúcio Ártico', 'Camocim', 'Maçã Radiativa'])
+const ROULETTE_ORDER = ['Ruína dos Cristais', 'Maçã Radiativa', 'Ilha dos Segredos', 'Camocim', 'Triatlo Infernal', 'Prepúcio Ártico', 'Cordilheira Rachada']
+const ISLAND_ART = {
+  'Prepúcio Ártico': 'prepucio-artico',
+  'Cordilheira Rachada': 'cordilheira-rachada',
+  'Triatlo Infernal': 'triatlo-infernal',
+  'Ruína dos Cristais': 'ruina-dos-cristais',
+  'Ilha dos Segredos': 'ilha-dos-segredos',
+  Camocim: 'camocim',
+  'Maçã Radiativa': 'maca-radiativa',
+}
+
+function rouletteSlicePath(index, count, radius = 235) {
+  const start = (-90 + index * 360 / count) * Math.PI / 180
+  const end = (-90 + (index + 1) * 360 / count) * Math.PI / 180
+  const x1 = 250 + radius * Math.cos(start)
+  const y1 = 250 + radius * Math.sin(start)
+  const x2 = 250 + radius * Math.cos(end)
+  const y2 = 250 + radius * Math.sin(end)
+  return `M 250 250 L ${x1} ${y1} A ${radius} ${radius} 0 0 1 ${x2} ${y2} Z`
+}
 
 function getPlayers() {
   try {
@@ -56,6 +76,7 @@ export default function IslandAssignmentRoulette() {
   const remainingPlayers = players.filter((player) => !assignedPlayers.has(player))
   const islandCounts = new Map(regions.map((region) => [region.id, assignments.filter((assignment) => assignment.regionId === region.id).length]))
   const availableIslands = islands.map((name) => regions.find((region) => region.name === name)).filter((region) => region && islandCounts.get(region.id) < 2)
+  const wheelIslands = [...availableIslands].sort((a, b) => ROULETTE_ORDER.indexOf(a.name) - ROULETTE_ORDER.indexOf(b.name))
   const finished = !remainingPlayers.length || !availableIslands.length
   const colorFor = (assignment) => COLORS[assignment.colorIndex % COLORS.length]
 
@@ -86,9 +107,10 @@ export default function IslandAssignmentRoulette() {
     const chosenPlayer = remainingPlayers[pickIndex(remainingPlayers.length)]
     const islandIndex = pickIndex(availableIslands.length)
     const chosenIsland = availableIslands[islandIndex]
+    const wheelIndex = wheelIslands.findIndex((region) => region.id === chosenIsland.id)
     setSpinning(true)
     setResult(null)
-    setRotation(nextRotation(rotation, islandIndex, availableIslands.length))
+    setRotation(nextRotation(rotation, wheelIndex, wheelIslands.length))
     window.setTimeout(() => {
       setAssignments((current) => [...current, { player: chosenPlayer, regionId: chosenIsland.id, colorIndex: current.length }])
       setHistory((entries) => [{ player: chosenPlayer, island: chosenIsland.name }, ...entries])
@@ -175,19 +197,34 @@ export default function IslandAssignmentRoulette() {
 
         <h3 className="roulette-title">ROLETA DE ILHAS</h3>
         <p className="assignment-instructions">Cada rodada sorteia um jogador ainda não atribuído e uma ilha com vaga.</p>
-        {availableIslands.length ? <div className="wheel-wrap assignment-wheel-wrap">
+        {wheelIslands.length ? <div className="wheel-wrap assignment-wheel-wrap">
           <div className="pointer">▼</div>
-          <div className="wheel" style={{ background: `conic-gradient(${availableIslands.map((region, index) => {
+          <div className="wheel" style={{ background: `conic-gradient(${wheelIslands.map((region, index) => {
             const start = index * (360 / availableIslands.length)
             const end = (index + 1) * (360 / availableIslands.length)
             const color = ISLAND_COLORS[region.name] ?? COLORS[index % COLORS.length]
             return `#102344 ${start}deg ${start + 1.2}deg, ${color} ${start + 1.2}deg ${end}deg`
           }).join(',')})`, transform: 'rotate(' + rotation + 'deg)' }}>
-            {availableIslands.map((region, index) => {
-              const segment = 360 / availableIslands.length
+            <svg className="wheel-island-art" viewBox="0 0 500 500" aria-hidden="true">
+              <defs>{wheelIslands.map((region, index) => <clipPath id={'wheel-slice-' + region.id} key={region.id}><path d={rouletteSlicePath(index, wheelIslands.length)} /></clipPath>)}</defs>
+              {wheelIslands.map((region, index) => {
+                const angle = (-90 + (index + .5) * 360 / wheelIslands.length) * Math.PI / 180
+                const centerX = 250 + Math.cos(angle) * 132
+                const centerY = 250 + Math.sin(angle) * 132
+                const imageName = ISLAND_ART[region.name]
+                return <image key={region.id} href={'/roulette-islands/' + imageName + '.webp'} x={centerX - 82} y={centerY - 70} width="164" height="140" preserveAspectRatio="xMidYMid meet" clipPath={'url(#wheel-slice-' + region.id + ')'} />
+              })}
+              <circle cx="250" cy="250" r="238" fill="none" stroke="#1d7cf0" strokeWidth="3" />
+              {Array.from({ length: 14 }, (_, index) => {
+                const angle = (index * 360 / 14 - 90) * Math.PI / 180
+                return <circle key={index} cx={250 + Math.cos(angle) * 238} cy={250 + Math.sin(angle) * 238} r="5.5" fill="#65dcff" stroke="#073c91" strokeWidth="2" />
+              })}
+            </svg>
+            {wheelIslands.map((region, index) => {
+              const segment = 360 / wheelIslands.length
               const angle = index * segment + segment / 2
               const darkLabel = DARK_LABEL_ISLANDS.has(region.name)
-              return <span key={region.id} className="lbl" style={{ width: Math.max(50, Math.min(128, 680 / availableIslands.length)) + 'px', marginLeft: Math.max(50, Math.min(128, 680 / availableIslands.length)) / -2 + 'px', fontSize: (availableIslands.length > 8 ? 9 : 12) + 'px', color: darkLabel ? '#172033' : '#fff', textShadow: darkLabel ? '0 1px 2px rgba(255,255,255,.8)' : '0 1px 4px rgba(0,0,0,.95)', transform: `rotate(${angle}deg) translateY(-150px) rotate(${-angle}deg)` }}>{region.name}</span>
+              return <span key={region.id} className="lbl" style={{ width: Math.max(50, Math.min(128, 680 / wheelIslands.length)) + 'px', marginLeft: Math.max(50, Math.min(128, 680 / wheelIslands.length)) / -2 + 'px', fontSize: (wheelIslands.length > 8 ? 9 : 12) + 'px', color: darkLabel ? '#172033' : '#fff', textShadow: darkLabel ? '0 1px 2px rgba(255,255,255,.8)' : '0 1px 4px rgba(0,0,0,.95)', transform: `rotate(${angle}deg) translateY(-150px) rotate(${-angle}deg)` }}>{region.name}</span>
             })}
           </div>
         </div> : <div className="wheel-empty">{remainingPlayers.length ? 'Todas as ilhas já atingiram o limite de 2 jogadores.' : 'Todos os jogadores já foram distribuídos.'}</div>}
