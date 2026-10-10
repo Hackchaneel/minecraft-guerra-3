@@ -148,7 +148,7 @@ main>*,.home-feature>*{animation:rise .7s cubic-bezier(.2,.7,.2,1) both}
 .crash{max-width:800px;margin:4rem auto;padding:1rem;color:#fff}.crash pre{background:#2a0a0a;border:1px solid #7a0000;padding:1rem;white-space:pre-wrap;overflow:auto;font-size:.8rem}
 
 /* ===== Parallax Hero Images (Home) ===== */
-.parallax-hero{position:relative;min-height:min(82vh,720px);display:grid;place-items:center;overflow:hidden;margin:2rem 0;border:2px solid #1d3b66;border-radius:2px;box-shadow:var(--bevel),0 0 50px #2a7be322;background:#050b17 url('./oceano-blocos-amanhecer.png') center/cover no-repeat}
+.parallax-hero{position:relative;min-height:min(82vh,720px);display:grid;place-items:center;overflow:hidden;margin:2rem 0;border:2px solid #1d3b66;border-radius:2px;box-shadow:var(--bevel),0 0 50px #2a7be322;background:#050b17 url('/oceano-blocos-amanhecer.png') center/cover no-repeat}
 .parallax-hero::after{display:none}
 .phi{position:absolute;inset:0;--mx:0;--my:0}
 .phi-img{position:absolute;width:clamp(120px,17vw,230px);aspect-ratio:4/3;object-fit:cover;border:2px solid #1d3b66;border-radius:2px;box-shadow:var(--bevel),6px 6px 0 #000a,0 0 30px #2a7be344;opacity:0;filter:blur(14px);user-select:none;transform:translate(-50%,-50%) scale(var(--sc))}
@@ -272,10 +272,10 @@ main.main-wide .assignment-map{max-width:1200px}
 @media(max-width:1450px){.home-ships{display:none}}
 @media(prefers-reduced-motion:reduce){.home-ship{animation:none}}
 .main-story{width:100%;max-width:none;padding:0}
-.story-page{min-height:calc(100vh - 76px);background:#050b17 url('./fundo-historia-bau.png') center center/cover fixed no-repeat}
+.story-page{min-height:calc(100vh - 76px);background:#050b17 url('/fundo-historia-bau.png') center center/cover fixed no-repeat}
 .story-page .section{max-width:1100px;min-height:inherit;margin:0 auto;padding:2.5rem 1rem 4rem}
 .story-release-note{display:flex;align-items:center;gap:.55rem;max-width:940px;margin:1rem auto;padding:.8rem 1rem;border-left:4px solid var(--fire);background:#09172bd9;color:var(--ice);font-family:var(--display);letter-spacing:.08em}
-.story-book{position:relative;isolation:isolate;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:7%;width:min(100%,1320px);aspect-ratio:1670/925;margin:1.5rem auto 0;padding:8.3% 9.2% 7.6%;background:url('./livro-capitulos-mg3.png') center/100% 100% no-repeat;filter:drop-shadow(0 20px 26px #0009)}
+.story-book{position:relative;isolation:isolate;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:7%;width:min(100%,1320px);aspect-ratio:1670/925;margin:1.5rem auto 0;padding:8.3% 9.2% 7.6%;background:url('/livro-capitulos-mg3.png') center/100% 100% no-repeat;filter:drop-shadow(0 20px 26px #0009)}
 .story-book-index,.story-book-page{position:relative;z-index:1;min-width:0;min-height:0;color:#382414;font-family:Georgia,'Times New Roman',serif}
 .story-book-index{padding:4% 3% 2% 2%;display:flex;flex-direction:column}
 .story-book-index h3,.story-book-page h3{margin:0;color:#512d14;font-family:var(--display);font-size:clamp(1rem,1.7vw,1.45rem);line-height:1.25;text-shadow:none}

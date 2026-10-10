@@ -7,7 +7,9 @@ html = html.replace(/ type="module"/g, '').replace(/ crossorigin/g, '').replace(
 html = html.replace('</head>', '<link rel="stylesheet" href="./assets/style.css"/></head>')
 mkdirSync('site-pronto/assets', { recursive: true })
 let css = readFileSync('src/styles/global.css', 'utf8')
-css = css.replaceAll("url('/como-vai-funcionar-fundo.png')", "url('../como-vai-funcionar-fundo.png')")
+for (const image of ['como-vai-funcionar-fundo.png', 'oceano-blocos-amanhecer.png', 'fundo-historia-bau.png', 'livro-capitulos-mg3.png']) {
+  css = css.replaceAll(`url('/${image}')`, `url('../${image}')`)
+}
 writeFileSync('site-pronto/assets/style.css', css)
 writeFileSync('site-pronto/index.html', html)
 cpSync('site-pronto', '../site', { recursive: true, force: true })
