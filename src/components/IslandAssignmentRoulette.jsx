@@ -187,7 +187,7 @@ export default function IslandAssignmentRoulette() {
               const segment = 360 / availableIslands.length
               const angle = index * segment + segment / 2
               const darkLabel = DARK_LABEL_ISLANDS.has(region.name)
-              return <span key={region.id} className="lbl" style={{ width: Math.max(50, Math.min(128, 680 / availableIslands.length)) + 'px', marginLeft: Math.max(50, Math.min(128, 680 / availableIslands.length)) / -2 + 'px', fontSize: (availableIslands.length > 8 ? 9 : 12) + 'px', color: darkLabel ? '#172033' : '#fff', textShadow: darkLabel ? '0 1px 2px rgba(255,255,255,.8)' : '0 1px 4px rgba(0,0,0,.95)', transform: `rotate(${angle}deg) translateY(-118px) rotate(${-angle}deg)` }}>{region.name}</span>
+              return <span key={region.id} className="lbl" style={{ width: Math.max(50, Math.min(128, 680 / availableIslands.length)) + 'px', marginLeft: Math.max(50, Math.min(128, 680 / availableIslands.length)) / -2 + 'px', fontSize: (availableIslands.length > 8 ? 9 : 12) + 'px', color: darkLabel ? '#172033' : '#fff', textShadow: darkLabel ? '0 1px 2px rgba(255,255,255,.8)' : '0 1px 4px rgba(0,0,0,.95)', transform: `rotate(${angle}deg) translateY(-150px) rotate(${-angle}deg)` }}>{region.name}</span>
             })}
           </div>
         </div> : <div className="wheel-empty">{remainingPlayers.length ? 'Todas as ilhas já atingiram o limite de 2 jogadores.' : 'Todos os jogadores já foram distribuídos.'}</div>}
