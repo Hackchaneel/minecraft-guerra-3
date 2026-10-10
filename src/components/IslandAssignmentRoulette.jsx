@@ -3,6 +3,7 @@ import { players as defaultPlayers } from '../data/players.js'
 import { islands } from '../data/islands.js'
 import { regions } from '../data/regions.js'
 import { nextRotation, pickIndex } from '../utils/spin.js'
+import './IslandAssignmentRoulette.css'
 
 const STORAGE_KEY = 'mg3:player-roulette-entries'
 const COLORS = ['#ff8a2b', '#56d7ff', '#b58cff', '#64e69a', '#ff5f86', '#f4d44d', '#ff9a66', '#79a9ff', '#f38cff', '#a8e063', '#ffc857', '#73e0d0', '#39c6d3', '#e6d27a']

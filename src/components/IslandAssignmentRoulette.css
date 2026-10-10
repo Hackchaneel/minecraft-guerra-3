@@ -1,0 +1,189 @@
+.island-assignment {
+  --assignment-sky: #35c8ff;
+  --assignment-flame: #ff9a1f;
+  --assignment-muted: #8fb0cc;
+}
+
+main.main-wide .island-assignment .assignment-panel {
+  justify-items: stretch;
+  width: min(100%, 980px);
+  margin: .8rem auto 1rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
+  gap: 1rem;
+  border: 2px solid #1d4f86;
+  background: linear-gradient(155deg, rgb(8 20 44 / 94%), rgb(5 11 28 / 96%));
+  box-shadow: inset 0 0 0 1px #35c8ff22, 0 0 24px rgb(30 110 255 / 15%);
+}
+
+main.main-wide .island-assignment .assignment-player-editor {
+  gap: .65rem;
+  padding: 1rem 1.1rem;
+  border: 2px solid #1d4f86;
+  background: rgb(8 20 44 / 82%);
+  box-shadow: 0 0 20px rgb(30 110 255 / 12%);
+}
+
+.island-assignment .player-entry-form { gap: .55rem; }
+.island-assignment .player-entry-form label,
+.island-assignment .assignment-history > b {
+  color: var(--assignment-sky);
+  font-family: var(--display, monospace);
+  font-size: 1rem;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.island-assignment .player-entry-controls { gap: .6rem; }
+.island-assignment .player-entry-controls input {
+  min-height: 44px;
+  padding: .65rem .8rem;
+  border: 2px solid #17406c;
+  border-radius: 0;
+  background: #030813;
+  color: #e8f1fa;
+}
+.island-assignment .player-entry-controls input:focus {
+  border-color: var(--assignment-sky);
+  box-shadow: 0 0 0 2px rgb(53 200 255 / 15%);
+}
+.island-assignment .player-entry-controls input::placeholder { color: #8fb0cc; }
+.island-assignment .player-entry-hint { color: var(--assignment-muted); font-size: .82rem; }
+
+.island-assignment .player-chip {
+  gap: .4rem;
+  padding: .25rem .35rem .25rem .7rem;
+  border: 1px solid #2a6aa8;
+  border-radius: 0;
+  background: #0e2444;
+  color: #e8f1fa;
+}
+.island-assignment .player-chip button { border-radius: 0; }
+.island-assignment .player-chip.is-assigned {
+  border-color: var(--pin-color);
+  background: color-mix(in srgb, var(--pin-color) 15%, #0e2444);
+  box-shadow: inset 0 -2px var(--pin-color);
+}
+
+.island-assignment .assignment-summary {
+  align-items: center;
+  gap: 14px;
+  color: var(--assignment-sky);
+  text-align: center;
+}
+.island-assignment .assignment-summary::before,
+.island-assignment .assignment-summary::after {
+  content: '';
+  flex: 1;
+  max-width: 70px;
+  height: 2px;
+  background: var(--assignment-sky);
+  opacity: .7;
+}
+.island-assignment .assignment-summary b { color: #e8f1fa; }
+
+.island-assignment .roulette-title {
+  margin: .1rem 0 0;
+  color: var(--assignment-sky);
+  font-family: var(--display, monospace);
+  font-size: 1.2rem;
+  letter-spacing: .08em;
+  text-shadow: 0 0 16px rgb(53 200 255 / 32%);
+}
+.island-assignment .assignment-instructions {
+  color: var(--assignment-muted);
+  text-align: center;
+}
+.island-assignment .assignment-wheel-wrap {
+  width: min(420px, 88vw);
+  filter: drop-shadow(0 0 30px rgb(40 120 255 / 40%));
+}
+.island-assignment .assignment-wheel-wrap .wheel {
+  border: 6px solid #0b1730;
+  outline: 3px solid var(--assignment-sky);
+  box-shadow: 0 0 0 9px #0b1730, 0 0 40px rgb(53 200 255 / 30%), inset 0 0 40px #0009;
+}
+.island-assignment .assignment-wheel-wrap .pointer { color: var(--assignment-flame); }
+
+.island-assignment .assignment-controls {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  width: min(100%, 720px);
+  gap: 14px;
+  margin: .3rem 0;
+}
+.island-assignment .assignment-controls .btn {
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: .8rem 1rem;
+  border: 0;
+  border-radius: 0;
+  clip-path: polygon(10px 0,calc(100% - 10px) 0,100% 10px,100% calc(100% - 10px),calc(100% - 10px) 100%,10px 100%,0 calc(100% - 10px),0 10px);
+  font-family: var(--body, system-ui, sans-serif);
+  font-size: clamp(15px, 2vw, 20px);
+  font-weight: 800;
+  letter-spacing: .01em;
+  text-align: center;
+  transition: filter .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+.island-assignment .assignment-controls .btn:hover:not(:disabled) {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgb(0 0 0 / 25%);
+}
+.island-assignment .assignment-controls .btn.primary {
+  background: linear-gradient(#ffc233, #ff8a00);
+  color: #1c0e00;
+  box-shadow: inset 0 0 0 3px #ffdf7a, inset 0 -6px 0 rgb(150 60 0 / 45%);
+}
+.island-assignment .assignment-controls .btn:not(.primary) {
+  background: linear-gradient(#0c2a58, #071a3a);
+  color: #4fd6ff;
+  box-shadow: inset 0 0 0 3px #1f78d0;
+}
+.island-assignment .assignment-controls .btn:disabled { filter: grayscale(.25); }
+
+.island-assignment .assignment-result {
+  min-height: 62px;
+  display: grid;
+  place-items: center;
+  padding: .65rem 1.2rem;
+  border: 2px solid var(--fire, #ff8a2b);
+  border-radius: 0;
+  background: #08193a;
+  box-shadow: 0 0 18px color-mix(in srgb, var(--fire, #ff8a2b) 55%, transparent);
+  text-align: center;
+}
+.island-assignment .assignment-live { color: var(--assignment-sky); }
+
+.island-assignment .assignment-history {
+  width: 100%;
+  max-width: none;
+  padding: 1rem 1.1rem;
+  border: 2px solid #1d4f86;
+  border-radius: 0;
+  background: rgb(8 20 44 / 82%);
+  box-shadow: 0 0 20px rgb(30 110 255 / 12%);
+}
+.island-assignment .assignment-history ol { display: grid; gap: 10px; padding: 0; list-style: none; }
+.island-assignment .assignment-history li {
+  padding: 10px 12px;
+  border-left: 6px solid var(--pin-color);
+  background: #0a1a38;
+  color: #e8f1fa;
+}
+.island-assignment .assignment-history li::marker { content: ''; }
+.island-assignment .assignment-history li span { border: 0; }
+
+@media (max-width: 600px) {
+  .island-assignment .assignment-summary { align-items: stretch; gap: .5rem; }
+  .island-assignment .assignment-summary::before,
+  .island-assignment .assignment-summary::after { max-width: 36px; }
+  .island-assignment .assignment-controls { grid-template-columns: 1fr; gap: 10px; }
+  .island-assignment .assignment-controls .btn { min-height: 54px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .island-assignment .assignment-controls .btn { transition: none; }
+}
