@@ -26,7 +26,6 @@ export default function Home() {
           <nav className="lobby-menu" aria-label="Atalhos do lobby">
             <Link className="lobby-world-card" to="/mundo">
               <span className="lobby-world-art" aria-hidden="true">
-                <img src="/minecraft-guerra-logo.png" alt="" />
                 <img src="/paisagem-voxel-entardecer.png" alt="" />
               </span>
               <span className="lobby-world-copy">
