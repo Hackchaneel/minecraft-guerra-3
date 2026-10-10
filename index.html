@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Minecraft Guerra 3</title><link rel="icon" href="./logo.webp"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,500;12..96,800&family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet"/>
+<style>body{margin:0;background:#050b17}#boot{color:#6fd8ff;font:16px monospace;text-align:center;padding:30vh 1rem 0}#err{position:fixed;z-index:99999;left:0;right:0;top:0;background:#7a0000;color:#fff;font:13px/1.4 monospace;padding:10px;white-space:pre-wrap;max-height:50vh;overflow:auto}</style>
+<script>
+(function(){
+  function show(m){var d=document.getElementById('err');if(!d){d=document.createElement('div');d.id='err';document.body.appendChild(d)}d.textContent+=m+'\n'}
+  window.addEventListener('error',function(e){if(e.target&&e.target.tagName==='LINK')return;show('ERRO: '+(e.message||('falha ao carregar '+(e.target&&(e.target.src||e.target.href)))))},true);
+  window.addEventListener('unhandledrejection',function(e){show('ERRO: '+((e.reason&&e.reason.message)||e.reason))});
+  setTimeout(function(){if(document.getElementById('boot'))show('O site demorou mais de 10s para carregar. Veja o terminal do npm run dev e copie qualquer erro em vermelho.')},10000);
+})();
+</script>
+</head>
+<body>
+<div id="root"><div id="boot">Carregando Minecraft Guerra 3...</div></div>
+<noscript>Ative o JavaScript para ver o site.</noscript>
+<script type="module" src="./src/main.jsx"></script>
+</body>
+</html>

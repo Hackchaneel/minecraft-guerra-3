@@ -1,0 +1,16 @@
+MINECRAFT GUERRA 3 - CÓDIGO-FONTE (React + Vite)
+
+Rodar:  npm install   (só na primeira vez)  ->  npm run dev
+Gerar o site pronto (abre com duplo clique, sem servidor):  npm run build:static   (cria a pasta site-pronto)
+
+Onde editar (src/data/): rules.js regras | islands.js ilhas fixas | players.js nomes padrão dos jogadores
+  team.js colaboradores | regions.js pontos do mapa | story.js história | steps.js etapas e vidas
+Na aba Roleta, adicione/remova jogadores; a lista fica salva no armazenamento local deste navegador.
+Ilhas continuam fixas em islands.js. Imagens: public/   Estilos: src/styles/global.css
+
+Se a página ficar em branco, uma faixa vermelha com o erro aparece no topo da tela.
+As fontes (Pixelify Sans e Bricolage Grotesque) vêm do Google Fonts: precisam de internet; sem ela entram fontes alternativas.
+
+
+
+Home: o carrossel de cartões está em src/components/MysteryCarousel.jsx.
