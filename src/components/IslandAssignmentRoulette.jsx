@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { players as defaultPlayers } from '../data/players.js'
 import { islands } from '../data/islands.js'
 import { regions } from '../data/regions.js'
@@ -6,6 +6,16 @@ import { nextRotation, pickIndex } from '../utils/spin.js'
 
 const STORAGE_KEY = 'mg3:player-roulette-entries'
 const COLORS = ['#ff8a2b', '#56d7ff', '#b58cff', '#64e69a', '#ff5f86', '#f4d44d', '#ff9a66', '#79a9ff', '#f38cff', '#a8e063', '#ffc857', '#73e0d0', '#39c6d3', '#e6d27a']
+const ISLAND_COLORS = {
+  'Prepúcio Ártico': '#f7f7f2',
+  'Cordilheira Rachada': '#a84b13',
+  'Triatlo Infernal': '#ed2939',
+  'Ruína dos Cristais': '#ff1493',
+  'Ilha dos Segredos': '#28a745',
+  Camocim: '#d4a017',
+  'Maçã Radiativa': '#f4d000',
+}
+const DARK_LABEL_ISLANDS = new Set(['Prepúcio Ártico', 'Camocim', 'Maçã Radiativa'])
 
 function getPlayers() {
   try {
@@ -30,6 +40,12 @@ export default function IslandAssignmentRoulette() {
   const [rotation, setRotation] = useState(0)
   const [spinning, setSpinning] = useState(false)
   const [result, setResult] = useState(null)
+  const [spotlightRegionId, setSpotlightRegionId] = useState(null)
+  const mapSectionRef = useRef(null)
+  const panelRef = useRef(null)
+  const revealTimers = useRef([])
+
+  useEffect(() => () => revealTimers.current.forEach((timer) => window.clearTimeout(timer)), [])
 
   useEffect(() => {
     try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(players)) } catch { /* Browser storage may be disabled. */ }
@@ -77,6 +93,14 @@ export default function IslandAssignmentRoulette() {
       setHistory((entries) => [{ player: chosenPlayer, island: chosenIsland.name }, ...entries])
       setResult({ player: chosenPlayer, island: chosenIsland.name })
       setSpinning(false)
+      setSpotlightRegionId(chosenIsland.id)
+      mapSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      const zoomOutTimer = window.setTimeout(() => {
+        setSpotlightRegionId(null)
+        const returnTimer = window.setTimeout(() => panelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 1200)
+        revealTimers.current.push(returnTimer)
+      }, 3200)
+      revealTimers.current.push(zoomOutTimer)
     }, 4200)
   }
 
@@ -86,12 +110,20 @@ export default function IslandAssignmentRoulette() {
     setHistory([])
     setResult(null)
     setRotation(0)
+    setSpotlightRegionId(null)
   }
 
   return (
     <div className="island-assignment">
-      <section className="assignment-map-section" aria-label="Mapa e distribuição de jogadores">
-        <div className="assignment-map">
+      <section ref={mapSectionRef} className="assignment-map-section" aria-label="Mapa e distribuição de jogadores">
+        <div className="assignment-map-viewport">
+          <div
+            className={'assignment-map' + (spotlightRegionId ? ' is-spotlight' : '')}
+            style={spotlightRegionId ? {
+              '--focus-x': `${regions.find((region) => region.id === spotlightRegionId)?.x ?? 50}%`,
+              '--focus-y': `${regions.find((region) => region.id === spotlightRegionId)?.y ?? 50}%`,
+            } : undefined}
+          >
           <img src="./mapa-roleta.png" alt="Mapa do Arquipélago Voxel com os nomes das ilhas" draggable="false" />
           {regions.map((region) => {
             const playersOnIsland = assignments.filter((assignment) => assignment.regionId === region.id)
@@ -109,6 +141,7 @@ export default function IslandAssignmentRoulette() {
               )
             })
           })}
+          </div>
         </div>
         <div className="assignment-summary">
           <span><b>{assignments.length}</b> jogador(es) distribuído(s) de <b>{players.length}</b></span>
@@ -116,13 +149,13 @@ export default function IslandAssignmentRoulette() {
         </div>
       </section>
 
-      <section className="assignment-panel" aria-label="Roleta de distribuição">
+      <section ref={panelRef} className="assignment-panel" aria-label="Roleta de distribuição">
         <div className="assignment-player-editor">
           <form className="player-entry-form" onSubmit={addPlayers}>
             <label htmlFor="assignment-player-entry">Jogadores</label>
             <div className="player-entry-controls">
-              <input id="assignment-player-entry" value={draft} onChange={(event) => setDraft(event.target.value)} placeholder="Adicionar nomes de jogadores…" autoComplete="off" disabled={spinning} />
-              <button className="btn primary" type="submit" disabled={spinning}>ADICIONAR</button>
+              <input id="assignment-player-entry" value={draft} onChange={(event) => setDraft(event.target.value)} placeholder="Adicionar nomes de jogadores…" autoComplete="off" disabled={spinning || Boolean(spotlightRegionId)} />
+              <button className="btn primary" type="submit" disabled={spinning || Boolean(spotlightRegionId)}>ADICIONAR</button>
             </div>
             <p className="player-entry-hint">Separe vários nomes por vírgula ou linha. Cada jogador é sorteado uma vez.</p>
           </form>
@@ -131,7 +164,7 @@ export default function IslandAssignmentRoulette() {
               const assigned = assignedPlayers.has(player)
               return <span className={'player-chip ' + (assigned ? 'is-assigned' : '')} key={player} style={assigned ? { '--pin-color': colorFor(assignments.find((entry) => entry.player === player)) } : undefined}>
                 {player}{assigned && <small>ATRIBUÍDO</small>}
-                {!assigned && <button type="button" aria-label={'Remover ' + player} title={'Remover ' + player} onClick={() => removePlayer(player)} disabled={spinning}>×</button>}
+                {!assigned && <button type="button" aria-label={'Remover ' + player} title={'Remover ' + player} onClick={() => removePlayer(player)} disabled={spinning || Boolean(spotlightRegionId)}>×</button>}
               </span>
             })}
             {!players.length && <span className="sub">Adicione jogadores para começar.</span>}
@@ -146,20 +179,21 @@ export default function IslandAssignmentRoulette() {
           <div className="wheel" style={{ background: `conic-gradient(${availableIslands.map((region, index) => {
             const start = index * (360 / availableIslands.length)
             const end = (index + 1) * (360 / availableIslands.length)
-            const color = COLORS[index % COLORS.length]
-            return `#facc15 ${start}deg ${start + 1.6}deg, ${color} ${start + 1.6}deg ${end}deg`
+            const color = ISLAND_COLORS[region.name] ?? COLORS[index % COLORS.length]
+            return `#102344 ${start}deg ${start + 1.2}deg, ${color} ${start + 1.2}deg ${end}deg`
           }).join(',')})`, transform: 'rotate(' + rotation + 'deg)' }}>
             {availableIslands.map((region, index) => {
               const segment = 360 / availableIslands.length
               const angle = index * segment + segment / 2
-              return <span key={region.id} className="lbl" style={{ width: Math.max(50, Math.min(128, 680 / availableIslands.length)) + 'px', marginLeft: Math.max(50, Math.min(128, 680 / availableIslands.length)) / -2 + 'px', fontSize: (availableIslands.length > 8 ? 9 : 12) + 'px', transform: `rotate(${angle}deg) translateY(-118px) rotate(${-angle}deg)` }}>{region.name}</span>
+              const darkLabel = DARK_LABEL_ISLANDS.has(region.name)
+              return <span key={region.id} className="lbl" style={{ width: Math.max(50, Math.min(128, 680 / availableIslands.length)) + 'px', marginLeft: Math.max(50, Math.min(128, 680 / availableIslands.length)) / -2 + 'px', fontSize: (availableIslands.length > 8 ? 9 : 12) + 'px', color: darkLabel ? '#172033' : '#fff', textShadow: darkLabel ? '0 1px 2px rgba(255,255,255,.8)' : '0 1px 4px rgba(0,0,0,.95)', transform: `rotate(${angle}deg) translateY(-118px) rotate(${-angle}deg)` }}>{region.name}</span>
             })}
           </div>
         </div> : <div className="wheel-empty">{remainingPlayers.length ? 'Todas as ilhas já atingiram o limite de 2 jogadores.' : 'Todos os jogadores já foram distribuídos.'}</div>}
 
         <div className="controls row assignment-controls">
-          <button className="btn primary" type="button" onClick={spin} disabled={spinning || finished}>{spinning ? 'SORTEANDO...' : 'SORTEAR JOGADOR + ILHA'}</button>
-          <button className="btn" type="button" onClick={reset} disabled={spinning || !assignments.length}>RESETAR DISTRIBUIÇÃO</button>
+          <button className="btn primary" type="button" onClick={spin} disabled={spinning || Boolean(spotlightRegionId) || finished}>{spinning ? 'SORTEANDO...' : 'SORTEAR JOGADOR + ILHA'}</button>
+          <button className="btn" type="button" onClick={reset} disabled={spinning || Boolean(spotlightRegionId) || !assignments.length}>RESETAR DISTRIBUIÇÃO</button>
         </div>
         {result && <div className="result assignment-result">🎯 {result.player} → {result.island}</div>}
         <p className="assignment-live" aria-live="polite">{!players.length ? 'Adicione jogadores para começar.' : finished ? (remainingPlayers.length ? 'Não há mais vagas disponíveis nas ilhas.' : 'Todos os jogadores foram distribuídos.') : 'Há ' + remainingPlayers.length + ' jogador(es) e ' + availableIslands.length + ' ilha(s) disponíveis.'}</p>

@@ -222,9 +222,11 @@ main>*,.home-feature>*{animation:rise .7s cubic-bezier(.2,.7,.2,1) both}
 /* Ocean fill stays visible around the world map at every zoom in both map modes. */
 .viewport{background-color:#17477f;background-image:radial-gradient(ellipse at 24% 35%,#2b64a066,transparent 38%),radial-gradient(ellipse at 74% 68%,#0e396c99,transparent 42%),linear-gradient(145deg,#143d70,#1d518b 52%,#103764)}
 .mapimg{background-color:#17477f;background-image:radial-gradient(ellipse at 20% 25%,#2a64a255,transparent 42%),radial-gradient(ellipse at 78% 72%,#0e396c88,transparent 45%),linear-gradient(145deg,#143d70,#1d518b 52%,#103764)}
-.assignment-map-section{width:100%;margin:1rem auto 1.5rem}
-.assignment-map{position:relative;width:100%;max-width:1100px;margin:0 auto;border:2px solid #6fd8ff88;background:#0b3b72;box-shadow:var(--bevel),0 14px 40px #0008;line-height:0}
-.assignment-map>img{width:100%;height:auto;display:block;user-select:none}
+.assignment-map-section{width:100%;margin:1rem auto 1.5rem;scroll-margin-top:88px}
+.assignment-map-viewport{position:relative;width:100%;max-width:1200px;aspect-ratio:16/9;margin:0 auto;overflow:hidden;border:2px solid #6fd8ff88;background:#0b3b72;box-shadow:var(--bevel),0 14px 40px #0008;line-height:0}
+.assignment-map{position:absolute;inset:0;width:100%;height:100%;margin:0;background:#0b3b72;line-height:0;transform:scale(1);transform-origin:var(--focus-x,50%) var(--focus-y,50%);transition:transform 1.15s cubic-bezier(.18,.72,.22,1)}
+.assignment-map.is-spotlight{transform:scale(2.15)}
+.assignment-map>img{width:100%;height:100%;display:block;object-fit:fill;user-select:none}
 .assignment-pin{position:absolute;z-index:2;display:flex;align-items:center;gap:.3rem;transform:translate(-8px,-50%);line-height:1;white-space:nowrap;pointer-events:none}
 .assignment-pin-head{position:relative;flex:0 0 auto;width:17px;height:17px;border:2px solid #fff;border-radius:50% 50% 50% 0;background:var(--pin-color);box-shadow:0 2px 8px #000c;transform:rotate(-45deg)}
 .assignment-pin-head:after{content:'';position:absolute;left:4px;top:4px;width:5px;height:5px;border-radius:50%;background:#fff}
@@ -255,7 +257,7 @@ main.main-wide .section{padding:1.35rem 0 2rem}
 main.main-wide .section h2{margin:.15rem 0 .65rem}
 main.main-wide .section>.sub{margin:.35rem 0 .7rem}
 main.main-wide .assignment-map-section{margin:.6rem auto .85rem}
-main.main-wide .assignment-map{max-width:1200px}
+main.main-wide .assignment-map-viewport{max-width:1200px}
 
 /* Decorative pirate ships appear only on the home page. */
 .home-page{position:relative;isolation:isolate}
