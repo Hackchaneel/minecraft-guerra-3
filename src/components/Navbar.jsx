@@ -35,6 +35,10 @@ export default function Navbar() {
 
   return (
     <header className="nav">
+      <div className="nav-animated-layer" aria-hidden="true">
+        <img className="nav-ship" src="/banner-navio.png" alt="" />
+        <img className="nav-waves" src="/banner-ondas.png" alt="" />
+      </div>
       <NavLink to="/" className="brand" aria-label="Minecraft Guerra 3 — início"><img src={mg3Logo} alt="Minecraft Guerra 3" /></NavLink>
       <button className="burger" type="button" aria-label={open ? 'Fechar menu' : 'Abrir menu'} aria-expanded={open} onClick={() => setOpen((value) => !value)}>{open ? '✕' : '☰'}</button>
       <nav ref={dock} aria-label="Navegação principal" className={`nav-dock ${open ? 'open' : ''}`} onPointerMove={magnify} onPointerLeave={resetMagnification}>
