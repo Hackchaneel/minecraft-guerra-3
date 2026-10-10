@@ -15,14 +15,14 @@
 }
 
 .lobby-art {
-  aspect-ratio: 2 / 1;
+  aspect-ratio: 16 / 9;
   min-width: 0;
   display: flex;
   align-items: flex-end;
   justify-content: center;
   padding: 14px 12px;
   border: 2px solid #1a3552;
-  background: url('/banner.webp') center / cover no-repeat;
+  background: url('/painel-principal-mg3.png') center / cover no-repeat;
 }
 
 .lobby-art span {
