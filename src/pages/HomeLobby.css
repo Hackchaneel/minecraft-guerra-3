@@ -1,12 +1,15 @@
 .lobby-frame {
-  width: 100%;
-  max-width: 1120px;
+  position: relative;
+  --lobby-offset: clamp(-220px, calc((1100px - 100vw) * .25), 0px);
+  left: var(--lobby-offset);
+  width: min(calc(100% - var(--lobby-offset)), calc(100vw - 32px));
+  max-width: 1320px;
   margin: 2rem auto 1rem;
-  padding: 22px;
+  padding: 26px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 350px;
+  grid-template-columns: minmax(0, 1fr) 380px;
   align-items: center;
-  gap: 28px;
+  gap: 32px;
   border: 1px solid #11243a;
   background: #060d1a;
 }
@@ -68,22 +71,35 @@
   text-decoration: none;
 }
 
-.lobby-world-card::before,
 .lobby-world-card::after { content: ''; position: absolute; inset: 0; }
 
-.lobby-world-card::before {
-  background: url('/minecraft-guerra-logo.png') center / cover no-repeat;
+.lobby-world-art {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+  background: #050b17;
+}
+
+.lobby-world-art img {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  object-fit: contain;
   transition: transform .5s ease;
 }
 
 .lobby-world-card::after {
+  z-index: 1;
   background: linear-gradient(transparent 20%, rgb(5 10 20 / 95%));
 }
 
-.lobby-world-card:hover::before { transform: scale(1.08); }
+.lobby-world-card:hover .lobby-world-art img { transform: scale(1.06); }
 .lobby-world-card:focus-visible,
 .lobby-shortcut:focus-visible { outline: 3px solid #35b6ff; outline-offset: 3px; }
-.lobby-world-card > * { position: relative; z-index: 1; }
+.lobby-world-card > .lobby-world-copy { position: relative; z-index: 2; display: flex; flex-direction: column; }
 .lobby-world-card b { font: 700 24px var(--display, 'Courier New', monospace); }
 .lobby-world-card small { color: #c2d4e4; }
 
@@ -118,7 +134,7 @@
 }
 
 @media (max-width: 860px) {
-  .lobby-frame { grid-template-columns: 1fr; gap: 22px; padding: 16px; }
+  .lobby-frame { left: auto; width: 100%; grid-template-columns: 1fr; gap: 22px; padding: 16px; }
   .lobby-side h2 { font-size: clamp(1.7rem, 7vw, 2.2rem); }
 }
 
@@ -128,6 +144,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .lobby-world-card::before { transition: none; }
+  .lobby-world-art img { transition: none; }
   .lobby-shortcut { transition: none; }
 }

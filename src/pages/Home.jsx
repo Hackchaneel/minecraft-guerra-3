@@ -25,8 +25,14 @@ export default function Home() {
           <p>Sobrevivência, guerra, exploração, equipes, alianças, traições e eliminação de jogadores.</p>
           <nav className="lobby-menu" aria-label="Atalhos do lobby">
             <Link className="lobby-world-card" to="/mundo">
-              <b>O Mundo</b>
-              <small>Comece explorando o mapa</small>
+              <span className="lobby-world-art" aria-hidden="true">
+                <img src="/minecraft-guerra-logo.png" alt="" />
+                <img src="/paisagem-voxel-entardecer.png" alt="" />
+              </span>
+              <span className="lobby-world-copy">
+                <b>O Mundo</b>
+                <small>Comece explorando o mapa</small>
+              </span>
             </Link>
             <Link className="lobby-shortcut" to="/historia"><ShortcutIcon type="book" />História</Link>
             <Link className="lobby-shortcut" to="/roleta"><ShortcutIcon type="dice" />Roletas</Link>
