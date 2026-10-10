@@ -1,0 +1,133 @@
+.lobby-frame {
+  width: 100%;
+  max-width: 1120px;
+  margin: 2rem auto 1rem;
+  padding: 22px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 350px;
+  align-items: center;
+  gap: 28px;
+  border: 1px solid #11243a;
+  background: #060d1a;
+}
+
+.lobby-art {
+  aspect-ratio: 2 / 1;
+  min-width: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 14px 12px;
+  border: 2px solid #1a3552;
+  background: url('/banner.webp') center / cover no-repeat;
+}
+
+.lobby-art span {
+  padding: 6px 14px;
+  background: rgb(5 10 20 / 78%);
+  color: #bfeaff;
+  font: 500 15px var(--display, 'Courier New', monospace);
+  text-align: center;
+}
+
+.lobby-side { min-width: 0; }
+
+.lobby-side h2 {
+  padding-left: 14px;
+  border-left: 6px solid var(--fire, #ff8a1f);
+  color: #7fd8ff;
+  font: 700 34px / 1.1 var(--display, 'Courier New', monospace);
+  letter-spacing: .04em;
+}
+
+.lobby-side > p {
+  margin: 14px 0 18px;
+  color: var(--sub, #8aa3bb);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.lobby-menu {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.lobby-world-card {
+  position: relative;
+  grid-column: 1 / -1;
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+  padding: 16px;
+  border: 2px solid var(--fire, #ff8a1f);
+  box-shadow: 4px 4px 0 #8a4400;
+  color: #fff;
+  text-decoration: none;
+}
+
+.lobby-world-card::before,
+.lobby-world-card::after { content: ''; position: absolute; inset: 0; }
+
+.lobby-world-card::before {
+  background: url('/minecraft-guerra-logo.png') center / cover no-repeat;
+  transition: transform .5s ease;
+}
+
+.lobby-world-card::after {
+  background: linear-gradient(transparent 20%, rgb(5 10 20 / 95%));
+}
+
+.lobby-world-card:hover::before { transform: scale(1.08); }
+.lobby-world-card:focus-visible,
+.lobby-shortcut:focus-visible { outline: 3px solid #35b6ff; outline-offset: 3px; }
+.lobby-world-card > * { position: relative; z-index: 1; }
+.lobby-world-card b { font: 700 24px var(--display, 'Courier New', monospace); }
+.lobby-world-card small { color: #c2d4e4; }
+
+.lobby-shortcut {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 14px 6px;
+  border: 2px solid #1a3552;
+  background: #0a1526;
+  color: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  transition: border-color .2s ease, background-color .2s ease, transform .2s ease;
+}
+
+.lobby-shortcut:hover { border-color: #35b6ff; background: #0f2038; transform: translateY(-2px); }
+
+.lobby-icon {
+  width: 26px;
+  height: 26px;
+  flex: none;
+  fill: none;
+  stroke: #35b6ff;
+  stroke-width: 1.7;
+  stroke-linecap: square;
+}
+
+@media (max-width: 860px) {
+  .lobby-frame { grid-template-columns: 1fr; gap: 22px; padding: 16px; }
+  .lobby-side h2 { font-size: clamp(1.7rem, 7vw, 2.2rem); }
+}
+
+@media (max-width: 420px) {
+  .lobby-frame { padding: 12px; }
+  .lobby-menu { gap: 6px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lobby-world-card::before { transition: none; }
+  .lobby-shortcut { transition: none; }
+}
