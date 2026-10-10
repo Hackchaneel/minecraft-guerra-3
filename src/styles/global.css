@@ -4,7 +4,13 @@ body{margin:0;background:radial-gradient(ellipse at top,#0d2247,var(--bg) 60%);c
 .particles{position:fixed;left:0;top:-300px;width:100%;height:calc(100% + 300px);will-change:transform;pointer-events:none;background-image:radial-gradient(2px 2px at 20% 30%,var(--ice),transparent),radial-gradient(2px 2px at 70% 60%,var(--fire),transparent),radial-gradient(1.5px 1.5px at 40% 80%,var(--purple),transparent),radial-gradient(1.5px 1.5px at 85% 15%,var(--green),transparent);background-size:300px 300px;opacity:.45;animation:drift 25s linear infinite}
 @keyframes drift{to{transform:translateY(300px)}}
 main{position:relative;max-width:1100px;margin:0 auto;padding:0 1rem}
-.nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:.8rem 1.2rem;background:#050b17 url('/banner-horizonte-pirata.png') center 46%/cover no-repeat;backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.nav{position:sticky;top:0;z-index:50;isolation:isolate;display:flex;align-items:center;justify-content:space-between;padding:.8rem 1.2rem;background:#050b17;backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.nav::before{content:"";position:absolute;inset:-2px;z-index:0;background:url('/banner-horizonte-pirata.png') center 46%/cover no-repeat;animation:nav-horizon-drift 28s ease-in-out infinite alternate;pointer-events:none}
+.nav::after{content:"";position:absolute;z-index:0;left:0;right:0;bottom:1px;height:14px;background:repeating-linear-gradient(170deg,transparent 0 20px,#5bd5ff30 22px,#d7f8ff48 24px,transparent 27px 48px);background-size:240px 14px;animation:nav-wave-glide 9s linear infinite;pointer-events:none}
+.nav>*{position:relative;z-index:1}
+@keyframes nav-horizon-drift{0%{background-position:49% 46%}100%{background-position:51% 46.8%}}
+@keyframes nav-wave-glide{to{background-position:240px 0}}
+@media(prefers-reduced-motion:reduce){.nav::before,.nav::after{animation:none}}
 .brand{font-family:var(--mono);font-weight:900;color:var(--ice);text-decoration:none;letter-spacing:2px}
 .nav nav{display:flex;gap:1.1rem}.nav nav a{color:var(--text);text-decoration:none;font-size:.8rem;letter-spacing:1px;padding:.3rem 0;border-bottom:2px solid transparent;transition:.2s}
 .nav nav a:hover,.nav nav a.active{color:var(--fire);border-color:var(--fire)}
