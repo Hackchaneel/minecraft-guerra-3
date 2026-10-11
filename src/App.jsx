@@ -19,7 +19,7 @@ export default function App() {
     {pathname === '/roleta' && <div className="coming-soon-gate" role="status" aria-live="polite">
       <div className="coming-soon-message">
         <h1>EM BREVE</h1>
-        <p>Página será liberada no dia da Guerra</p>
+        <p>Será liberado em breve.</p>
       </div>
     </div>}
     {pathname === '/' && <div className="home-ships" aria-hidden="true">
