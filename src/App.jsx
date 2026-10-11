@@ -16,6 +16,12 @@ export default function App() {
   return (<>
     <div className="particles" aria-hidden />
     <Navbar />
+    <div className="coming-soon-gate" role="status" aria-live="polite">
+      <div className="coming-soon-message">
+        <h1>EM BREVE</h1>
+        <p>Página será liberada no dia da Guerra</p>
+      </div>
+    </div>
     {pathname === '/' && <div className="home-ships" aria-hidden="true">
       <div className="home-ship-gutter home-ship-gutter-right">
         <img className="home-ship home-ship-right" src="./galeao-pirata-ondas-azuis.png" alt="" draggable="false" />
