@@ -16,8 +16,16 @@ const ISLAND_COLORS = {
   Camocim: '#d4a017',
   'Maçã Radiativa': '#f4d000',
 }
-const DARK_LABEL_ISLANDS = new Set(['Prepúcio Ártico', 'Camocim', 'Maçã Radiativa'])
 const ROULETTE_ORDER = ['Ruína dos Cristais', 'Maçã Radiativa', 'Ilha dos Segredos', 'Camocim', 'Triatlo Infernal', 'Prepúcio Ártico', 'Cordilheira Rachada']
+const ROULETTE_LABELS = {
+  'Prepúcio Ártico': ['Prepúcio', 'Ártico'],
+  'Cordilheira Rachada': ['Cordilheira', 'Rachada'],
+  'Triatlo Infernal': ['Triatlo', 'Infernal'],
+  'Ruína dos Cristais': ['Ruína dos', 'Cristais'],
+  'Ilha dos Segredos': ['Ilha dos', 'Segredos'],
+  Camocim: ['Camocim'],
+  'Maçã Radiativa': ['Maçã', 'Radioativa'],
+}
 const ISLAND_ART = {
   'Prepúcio Ártico': 'prepucio-artico',
   'Cordilheira Rachada': 'cordilheira-rachada',
@@ -209,10 +217,10 @@ export default function IslandAssignmentRoulette() {
               <defs>{wheelIslands.map((region, index) => <clipPath id={'wheel-slice-' + region.id} key={region.id}><path d={rouletteSlicePath(index, wheelIslands.length)} /></clipPath>)}</defs>
               {wheelIslands.map((region, index) => {
                 const angle = (-90 + (index + .5) * 360 / wheelIslands.length) * Math.PI / 180
-                const centerX = 250 + Math.cos(angle) * 132
-                const centerY = 250 + Math.sin(angle) * 132
+                const centerX = 250 + Math.cos(angle) * 150
+                const centerY = 250 + Math.sin(angle) * 150
                 const imageName = ISLAND_ART[region.name]
-                return <image key={region.id} href={'/roulette-islands/' + imageName + '.webp'} x={centerX - 82} y={centerY - 70} width="164" height="140" preserveAspectRatio="xMidYMid meet" clipPath={'url(#wheel-slice-' + region.id + ')'} />
+                return <image key={region.id} href={'/roulette-islands/' + imageName + '.webp'} x={centerX - 65} y={centerY - 56} width="130" height="112" preserveAspectRatio="xMidYMid meet" clipPath={'url(#wheel-slice-' + region.id + ')'} style={{ transform: `rotate(${-rotation}deg)` }} />
               })}
               <circle cx="250" cy="250" r="238" fill="none" stroke="#1d7cf0" strokeWidth="3" />
               {Array.from({ length: 14 }, (_, index) => {
@@ -223,8 +231,12 @@ export default function IslandAssignmentRoulette() {
             {wheelIslands.map((region, index) => {
               const segment = 360 / wheelIslands.length
               const angle = index * segment + segment / 2
-              const darkLabel = DARK_LABEL_ISLANDS.has(region.name)
-              return <span key={region.id} className="lbl" style={{ width: Math.max(50, Math.min(128, 680 / wheelIslands.length)) + 'px', marginLeft: Math.max(50, Math.min(128, 680 / wheelIslands.length)) / -2 + 'px', fontSize: (wheelIslands.length > 8 ? 9 : 12) + 'px', color: darkLabel ? '#172033' : '#fff', textShadow: darkLabel ? '0 1px 2px rgba(255,255,255,.8)' : '0 1px 4px rgba(0,0,0,.95)', transform: `rotate(${angle}deg) translateY(-150px) rotate(${-angle}deg)` }}>{region.name}</span>
+              const labelWidth = Math.max(74, Math.min(150, 800 / wheelIslands.length))
+              return <span key={region.id} className="lbl" style={{ width: labelWidth + 'px', marginLeft: labelWidth / -2 + 'px', '--label-angle': angle + 'deg' }}>
+                <span className="wheel-label-text" style={{ transform: `rotate(${-rotation}deg)` }}>
+                  {ROULETTE_LABELS[region.name].map((line) => <span key={line}>{line}</span>)}
+                </span>
+              </span>
             })}
           </div>
         </div> : <div className="wheel-empty">{remainingPlayers.length ? 'Todas as ilhas já atingiram o limite de 2 jogadores.' : 'Todos os jogadores já foram distribuídos.'}</div>}
