@@ -123,6 +123,8 @@ export default function IslandAssignmentRoulette() {
       setAssignments((current) => [...current, { player: chosenPlayer, regionId: chosenIsland.id, colorIndex: current.length }])
       setHistory((entries) => [{ player: chosenPlayer, island: chosenIsland.name }, ...entries])
       setResult({ player: chosenPlayer, island: chosenIsland.name })
+      const resultTimer = window.setTimeout(() => setResult(null), 1500)
+      revealTimers.current.push(resultTimer)
       setSpinning(false)
       setSpotlightRegionId(chosenIsland.id)
       mapSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -146,6 +148,7 @@ export default function IslandAssignmentRoulette() {
 
   return (
     <div className="island-assignment">
+      {result && <div className="assignment-player-reveal" role="status" aria-live="assertive"><span>{result.player}</span></div>}
       <section ref={mapSectionRef} className="assignment-map-section" aria-label="Mapa e distribuição de jogadores">
         <div className="assignment-map-viewport">
           <div
@@ -245,7 +248,6 @@ export default function IslandAssignmentRoulette() {
           <button className="btn primary" type="button" onClick={spin} disabled={spinning || Boolean(spotlightRegionId) || finished}>{spinning ? 'SORTEANDO...' : 'SORTEAR JOGADOR + ILHA'}</button>
           <button className="btn" type="button" onClick={reset} disabled={spinning || Boolean(spotlightRegionId) || !assignments.length}>RESETAR DISTRIBUIÇÃO</button>
         </div>
-        {result && <div className="result assignment-result">🎯 {result.player} → {result.island}</div>}
         <p className="assignment-live" aria-live="polite">{!players.length ? 'Adicione jogadores para começar.' : finished ? (remainingPlayers.length ? 'Não há mais vagas disponíveis nas ilhas.' : 'Todos os jogadores foram distribuídos.') : 'Há ' + remainingPlayers.length + ' jogador(es) e ' + availableIslands.length + ' ilha(s) disponíveis.'}</p>
         <div className="history card assignment-history"><b>Distribuição</b>{history.length ? <ol>{history.map((entry, index) => <li key={entry.player + index} style={{ '--pin-color': colorFor(assignments[assignments.length - 1 - index]) }}><span>{entry.player} → {entry.island}</span></li>)}</ol> : <p className="sub">Nenhum jogador sorteado ainda.</p>}</div>
       </section>
