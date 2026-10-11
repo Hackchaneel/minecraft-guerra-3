@@ -370,8 +370,8 @@ main.main-wide .assignment-map-viewport{max-width:1200px}
 
 /* Mantém o galeão na posição original e mostra o arquivo inteiro sem recortes. */
 .home-ships{z-index:2}
-.home-ship-gutter-right{top:250px;right:0;bottom:0;width:max(0px,calc((100vw - min(1100px,100vw - 32px))/2));height:auto;overflow:visible;align-items:flex-end;justify-content:flex-end;padding:0 0 2vh;transform:translateX(65%)}
-.home-ship{width:auto;height:min(60vh,640px);max-width:none;object-fit:contain;object-position:center bottom}
+.home-ship-gutter-right{top:250px;right:0;bottom:0;width:max(0px,calc((100vw - min(1100px,100vw - 32px))/2));height:auto;overflow:visible;align-items:flex-end;justify-content:flex-end;padding:0;transform:translateX(65%)}
+.home-ship{width:auto;height:min(66vh,700px);max-width:none;object-fit:contain;object-position:center bottom}
 @media(prefers-reduced-motion:reduce){.how-3d-card,.how-progress-track span,.how-arrow{transition:none}.how-3d-card{animation:none}}
 main.main-wide .assignment-summary{max-width:none;margin-top:.4rem}
 main.main-wide .assignment-panel{margin:.55rem auto;padding:clamp(.7rem,1.4vw,1rem);gap:.55rem}
