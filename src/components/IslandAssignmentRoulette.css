@@ -256,24 +256,37 @@ main.main-wide .island-assignment .assignment-player-editor,
   place-items: center;
   overflow: hidden;
   pointer-events: none;
+  isolation: isolate;
+  animation: assignment-screen-dim 1.8s ease-in-out both;
+}
+.island-assignment .assignment-player-reveal::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: rgb(1 5 15 / 82%);
+  content: '';
 }
 .island-assignment .assignment-player-reveal span {
   max-width: min(94vw, 1200px);
   padding: .15em .32em;
   color: #fff;
-  font-family: var(--font-pixel, 'Press Start 2P', monospace);
+  font-family: var(--display, 'Pixelify Sans', monospace);
   font-size: clamp(2.4rem, 10vw, 8rem);
   line-height: 1.2;
   text-align: center;
   overflow-wrap: anywhere;
   text-shadow: 0 0 8px #fff, 0 0 24px #36cfff, 0 0 52px #168bff, 5px 5px 0 #102b64;
-  animation: assignment-name-flash 1.5s steps(1, end) both;
+  animation: assignment-name-reveal 1.8s ease-in-out both;
 }
-@keyframes assignment-name-flash {
-  0%, 12%, 25%, 38%, 51%, 64%, 77% { opacity: 1; transform: scale(1); }
-  6%, 19%, 32%, 45%, 58%, 71% { opacity: .08; transform: scale(.96); }
-  88% { opacity: 1; transform: scale(1.06); }
-  100% { opacity: 0; transform: scale(1.12); }
+@keyframes assignment-screen-dim {
+  0%, 100% { opacity: 0; }
+  14%, 76% { opacity: 1; }
+}
+@keyframes assignment-name-reveal {
+  0%, 100% { opacity: 0; transform: translateY(14px) scale(.92); filter: blur(8px); }
+  18% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+  72% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+  90% { opacity: 0; transform: translateY(-6px) scale(1.02); filter: blur(3px); }
 }
 .island-assignment .assignment-live { min-height: 1.3em; margin: 0; color: var(--assignment-sky); text-align: center; }
 
@@ -304,5 +317,6 @@ main.main-wide .island-assignment .assignment-player-editor,
   .island-assignment .assignment-controls .btn { transition: none; }
   .island-assignment .assignment-wheel-wrap .wheel-island-art image,
   .island-assignment .wheel-label-text { transition-duration: .01ms; }
+  .island-assignment .assignment-player-reveal,
   .island-assignment .assignment-player-reveal span { animation: none; opacity: 1; }
 }

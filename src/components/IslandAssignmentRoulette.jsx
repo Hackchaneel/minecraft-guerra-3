@@ -123,7 +123,7 @@ export default function IslandAssignmentRoulette() {
       setAssignments((current) => [...current, { player: chosenPlayer, regionId: chosenIsland.id, colorIndex: current.length }])
       setHistory((entries) => [{ player: chosenPlayer, island: chosenIsland.name }, ...entries])
       setResult({ player: chosenPlayer, island: chosenIsland.name })
-      const resultTimer = window.setTimeout(() => setResult(null), 1500)
+      const resultTimer = window.setTimeout(() => setResult(null), 1800)
       revealTimers.current.push(resultTimer)
       setSpinning(false)
       setSpotlightRegionId(chosenIsland.id)
