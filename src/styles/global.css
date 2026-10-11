@@ -343,6 +343,37 @@ main.main-wide .assignment-map-viewport{max-width:1200px}
 .how-additional-info strong{color:#3e2814}
 @keyframes how-card-enter{from{opacity:0;transform:perspective(1100px) translateY(16px) scale(.975)}to{opacity:1}}
 @media(max-width:760px){.brand{width:170px;height:50px}.main-how .how-page{min-height:calc(100vh - 64px);padding:1.2rem .7rem;justify-content:center}.how-page::before{background-position:center top}.how-page::after{background:#07101b35}.how-parchment-panel{width:min(100%,620px);max-height:calc(100vh - 88px);margin:auto;padding:1.15rem .8rem;transform:none}.how-page-title{font-size:clamp(1.4rem,7vw,2.1rem)}.how-carousel{grid-template-columns:34px minmax(0,1fr) 34px;gap:.35rem}.how-3d-card{min-height:clamp(300px,48vh,450px);max-height:52vh;padding:1.05rem .85rem}.how-card-number{font-size:5.5rem}.how-card-content ul{font-size:.94rem;line-height:1.45;gap:.55rem}.how-arrow{width:34px;height:34px;font-size:1.2rem}.how-carousel-status{width:calc(100% - 4.4rem)}.how-page-kicker{letter-spacing:.08em}}
+
+/* Seletor de colaboradores inspirado no HTML de referência. */
+.team-selector{width:100%;max-width:1120px;margin:1.25rem auto 0;padding:clamp(1rem,3vw,2.1rem);border:1px solid #11243a;background:#060d1c}
+.team-tabs{display:flex;flex-wrap:wrap;gap:10px;margin:1.2rem 0 .9rem}
+.team-tab{display:flex;align-items:center;gap:10px;padding:8px 16px 8px 8px;border:2px solid #1a3a62;background:#0a1628;color:var(--text);font:600 1rem var(--body,system-ui,sans-serif);cursor:pointer;transition:background .2s,border-color .2s,box-shadow .2s,transform .2s}
+.team-tab:hover{transform:translateY(-2px);border-color:var(--ice)}
+.team-tab.is-selected{border-color:var(--fire);background:#13294a;box-shadow:3px 3px 0 #8a4400}
+.team-avatar{display:grid;flex:none;place-items:center;color:#10102a;background:linear-gradient(135deg,#a58bff,#58b8ff);box-shadow:inset 3px 3px 0 #ffffff73,inset -3px -3px 0 #0004,4px 4px 0 #14234a;font-family:var(--display,'Courier New',monospace);font-weight:700}
+.team-avatar-small{width:38px;height:38px;font-size:1.1rem;box-shadow:inset 2px 2px 0 #ffffff73,inset -2px -2px 0 #0004}
+.team-stage{position:relative;display:flex;min-height:340px;align-items:center;overflow:hidden;padding:clamp(1.2rem,4vw,2.1rem);border:2px solid #1a3a62}
+.team-stage-background{position:absolute;inset:0;background:#060d1c url('/team-panel-bg.jpg') center/cover no-repeat;filter:brightness(.55) saturate(1.1)}
+.team-stage::after{position:absolute;inset:0;background:linear-gradient(90deg,#050a14eb 0%,#050a14b8 48%,transparent 100%);content:'';pointer-events:none}
+.team-detail{position:relative;z-index:1;display:grid;grid-template-columns:auto minmax(0,1fr);align-items:start;gap:10px 28px;max-width:680px;animation:team-detail-enter .38s ease-out both}
+.team-avatar-large{grid-row:span 4;width:130px;height:130px;font-size:3.75rem}
+.team-detail h3{margin:0;color:#e8f1fa;font:700 clamp(2rem,5vw,2.5rem)/1.05 var(--display,'Courier New',monospace)}
+.team-role{display:inline-block;color:var(--fire);font:600 .72rem/1.4 var(--body,system-ui,sans-serif);letter-spacing:.14em;text-transform:uppercase}
+.team-detail p{color:#c7d8e8;font-size:1rem;line-height:1.6}
+.team-controls{display:flex;flex-wrap:wrap;gap:10px;margin-top:.25rem}
+.team-controls button{padding:8px 16px;border:2px solid #7fd0ff;color:var(--text);font:700 .82rem var(--display,'Courier New',monospace);cursor:pointer;transition:background .2s,transform .2s}
+.team-controls button:hover{transform:translateY(-2px);background:#5ecbff33}
+@keyframes team-detail-enter{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:860px){.team-detail{grid-template-columns:1fr;gap:.7rem}.team-avatar-large{grid-row:auto;width:90px;height:90px;font-size:2.5rem}.team-stage::after{background:#050a14b8}}
+@media(max-width:600px){.team-selector{padding:.8rem}.team-tab{gap:7px;padding:6px 10px 6px 6px;font-size:.9rem}.team-avatar-small{width:34px;height:34px}.team-stage{min-height:320px;padding:1rem}.team-detail h3{font-size:2rem}}
+@media(prefers-reduced-motion:reduce){.team-tab,.team-controls button{transition:none}.team-detail{animation:none}}
+
+/* Exibe o galeão inteiro, mesmo quando ele avança sobre o conteúdo da home. */
+.home-ships{z-index:2}
+.home-ship-gutter-right{top:150px;right:0;bottom:auto;width:clamp(360px,36vw,660px);height:min(82vh,820px);overflow:visible;align-items:flex-start;justify-content:flex-end;padding:0}
+.home-ship{width:100%;height:100%;object-fit:contain;object-position:right top}
+@media(max-width:1450px){.home-ships{display:block}}
+@media(max-width:760px){.home-ship-gutter-right{top:105px;width:min(62vw,390px);height:min(56vh,500px)}}
 @media(prefers-reduced-motion:reduce){.how-3d-card,.how-progress-track span,.how-arrow{transition:none}.how-3d-card{animation:none}}
 main.main-wide .assignment-summary{max-width:none;margin-top:.4rem}
 main.main-wide .assignment-panel{margin:.55rem auto;padding:clamp(.7rem,1.4vw,1rem);gap:.55rem}
