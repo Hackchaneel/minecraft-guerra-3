@@ -61,6 +61,12 @@ const islandOrigins = {
     { name: 'Ilha da Paz', image: 'ilha-da-paz' },
   ],
 }
+const islandBackgrounds = {
+  'Cordilheira Rachada': 'cordilheira-rachada.jpg',
+  'Triatlo Infernal': 'triatlo-infernal.jpg',
+  Camocim: 'camocim.jpg',
+  'Ruína dos Cristais': 'ruina-dos-cristais.jpg',
+}
 export default function MapViewer() {
   const [t, setT] = useState({ x: 0, y: 0, s: 1 })
   const [sel, setSel] = useState(regions[0])
@@ -68,6 +74,12 @@ export default function MapViewer() {
   const [drawTool, setDrawTool] = useState('pencil')
   const [drawColor, setDrawColor] = useState(pencilColors[0].value)
   const [strokes, setStrokes] = useState([])
+  const islandStyle = {
+    '--island-color': islandColors[sel.name] ?? '#5ecbff',
+    '--island-background': islandBackgrounds[sel.name]
+      ? `url("/island-backgrounds/${islandBackgrounds[sel.name]}")`
+      : 'none',
+  }
   const detailDialog = useRef(null)
   const drag = useRef(null)
   const viewport = useRef(null)
@@ -200,7 +212,7 @@ export default function MapViewer() {
         <div className="zoombtns"><button onClick={() => zoom(0.3)}>＋</button><button onClick={() => zoom(-0.3)}>－</button><button onClick={() => setT({ x: 0, y: 0, s: 1 })}>⟲</button></div>
       </div>
       {mode === 'names' && <>
-      <aside className="card info world-island-preview" style={{ '--island-color': islandColors[sel.name] ?? '#5ecbff' }}>
+      <aside className="card info world-island-preview" style={islandStyle}>
         <img className="world-island-preview-art" src={'/roulette-islands/' + islandArt[sel.name] + '.webp'} alt="" />
         <div className="world-island-preview-copy">
           <h3>{sel.name}</h3>
@@ -213,7 +225,7 @@ export default function MapViewer() {
         </button>
       </aside>
 
-      <dialog ref={detailDialog} className="world-island-dialog" style={{ '--island-color': islandColors[sel.name] ?? '#5ecbff' }} onClick={(event) => { if (event.target === detailDialog.current) detailDialog.current.close() }}>
+      <dialog ref={detailDialog} className="world-island-dialog" style={islandStyle} onClick={(event) => { if (event.target === detailDialog.current) detailDialog.current.close() }}>
         <button className="world-island-close" type="button" aria-label="Fechar ficha" onClick={() => detailDialog.current?.close()}>×</button>
         <article className="world-island-card">
           <header className="world-island-card-header">
