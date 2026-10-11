@@ -16,6 +16,11 @@ function ShortcutIcon({ type }) {
 
 export default function Home() {
   return (<div className="home-page"><div className="home-content">
+      <Link className="story-announcement" to="/historia">
+        <span className="story-announcement-icon" aria-hidden="true">📕</span>
+        <span>Capítulos novos da História Disponíveis!!</span>
+        <strong>LER AGORA <span aria-hidden="true">→</span></strong>
+      </Link>
       <section className="lobby-frame" aria-label="Lobby Minecraft Guerra 3">
         <div className="lobby-art" role="img" aria-label="Imagem principal do Minecraft Guerra 3">
           <span>A guerra está prestes a começar.</span>
