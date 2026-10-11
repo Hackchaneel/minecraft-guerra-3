@@ -368,12 +368,10 @@ main.main-wide .assignment-map-viewport{max-width:1200px}
 @media(max-width:600px){.team-selector{padding:.8rem}.team-tab{gap:7px;padding:6px 10px 6px 6px;font-size:.9rem}.team-avatar-small{width:34px;height:34px}.team-stage{min-height:320px;padding:1rem}.team-detail h3{font-size:2rem}}
 @media(prefers-reduced-motion:reduce){.team-tab,.team-controls button{transition:none}.team-detail{animation:none}}
 
-/* Exibe o galeão inteiro, mesmo quando ele avança sobre o conteúdo da home. */
+/* Mantém o galeão na posição original e mostra o arquivo inteiro sem recortes. */
 .home-ships{z-index:2}
-.home-ship-gutter-right{top:150px;right:0;bottom:auto;width:clamp(360px,36vw,660px);height:min(82vh,820px);overflow:visible;align-items:flex-start;justify-content:flex-end;padding:0}
-.home-ship{width:100%;height:100%;object-fit:contain;object-position:right top}
-@media(max-width:1450px){.home-ships{display:block}}
-@media(max-width:760px){.home-ship-gutter-right{top:105px;width:min(62vw,390px);height:min(56vh,500px)}}
+.home-ship-gutter-right{top:250px;right:0;bottom:0;width:max(0px,calc((100vw - min(1100px,100vw - 32px))/2));height:auto;overflow:visible;align-items:flex-end;justify-content:flex-end;padding:0 0 2vh}
+.home-ship{width:auto;height:min(68vh,720px);max-width:none;object-fit:contain;object-position:center bottom}
 @media(prefers-reduced-motion:reduce){.how-3d-card,.how-progress-track span,.how-arrow{transition:none}.how-3d-card{animation:none}}
 main.main-wide .assignment-summary{max-width:none;margin-top:.4rem}
 main.main-wide .assignment-panel{margin:.55rem auto;padding:clamp(.7rem,1.4vw,1rem);gap:.55rem}
