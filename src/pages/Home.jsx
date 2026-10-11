@@ -22,7 +22,7 @@ export default function Home() {
         </div>
         <div className="lobby-side">
           <h2>LOBBY MG3</h2>
-          <p>Sobrevivência, guerra, exploração, equipes, alianças, traições e eliminação de jogadores.</p>
+          <p>Não estamos mais no céu... Agora teremos que sobreviver no Mundo de Baixo.</p>
           <nav className="lobby-menu" aria-label="Atalhos do lobby">
             <Link className="lobby-world-card" to="/mundo">
               <span className="lobby-world-art" aria-hidden="true">

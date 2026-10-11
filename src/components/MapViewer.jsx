@@ -3,6 +3,16 @@ import { regions } from '../data/regions.js'
 const maps = { names: ['Mapa com nomes', './mapa.webp'], art: ['Mapa ilustrado', './mapa-ilustrado.jpg'] }
 const CANVAS_WIDTH = 1200
 const CANVAS_HEIGHT = 675
+const pencilColors = [
+  { name: 'Laranja', value: '#ff8a2b' },
+  { name: 'Branco', value: '#ffffff' },
+  { name: 'Vermelho', value: '#ef3340' },
+  { name: 'Amarelo', value: '#ffd43b' },
+  { name: 'Verde', value: '#38d878' },
+  { name: 'Azul', value: '#39a9ff' },
+  { name: 'Roxo', value: '#b56bff' },
+  { name: 'Rosa', value: '#ff66b3' },
+]
 const islandArt = {
   'Prepúcio Ártico': 'prepucio-artico',
   'Cordilheira Rachada': 'cordilheira-rachada',
@@ -26,6 +36,7 @@ export default function MapViewer() {
   const [sel, setSel] = useState(regions[0])
   const [mode, setMode] = useState('names')
   const [drawTool, setDrawTool] = useState('pencil')
+  const [drawColor, setDrawColor] = useState(pencilColors[0].value)
   const [strokes, setStrokes] = useState([])
   const detailDialog = useRef(null)
   const drag = useRef(null)
@@ -54,7 +65,7 @@ export default function MapViewer() {
     for (const stroke of strokes) {
       if (!stroke.points.length) continue
       context.globalCompositeOperation = stroke.tool === 'eraser' ? 'destination-out' : 'source-over'
-      context.strokeStyle = '#ff8a2b'
+      context.strokeStyle = stroke.color ?? '#ff8a2b'
       context.lineWidth = stroke.tool === 'eraser' ? 38 : 8
       context.lineCap = 'round'
       context.lineJoin = 'round'
@@ -83,11 +94,11 @@ export default function MapViewer() {
     drawingPointer.current = event.pointerId
     event.currentTarget.setPointerCapture(event.pointerId)
     const point = drawingPoint(event)
-    activeStroke.current = { tool: drawTool, points: [point] }
+    activeStroke.current = { tool: drawTool, color: drawColor, points: [point] }
     const context = canvas.current?.getContext('2d')
     if (!context) return
     context.globalCompositeOperation = drawTool === 'eraser' ? 'destination-out' : 'source-over'
-    context.strokeStyle = '#ff8a2b'
+    context.strokeStyle = drawColor
     context.lineWidth = drawTool === 'eraser' ? 38 : 8
     context.lineCap = 'round'
     context.lineJoin = 'round'
@@ -129,6 +140,9 @@ export default function MapViewer() {
     {mode === 'art' && <div className="row map-tools" role="toolbar" aria-label="Ferramentas de desenho do mapa">
       <button className={`btn ${drawTool === 'pan' ? 'primary' : ''}`} aria-pressed={drawTool === 'pan'} onClick={() => setDrawTool('pan')}>✋ MOVER</button>
       <button className={`btn ${drawTool === 'pencil' ? 'primary' : ''}`} aria-pressed={drawTool === 'pencil'} onClick={() => setDrawTool('pencil')}>✏️ LÁPIS</button>
+      <div className="map-pencil-colors" role="group" aria-label="Cor do lápis">
+        {pencilColors.map((color) => <button key={color.value} className={`map-pencil-color${drawColor === color.value ? ' is-selected' : ''}`} type="button" style={{ '--pencil-color': color.value }} aria-label={`Cor ${color.name}`} aria-pressed={drawColor === color.value} title={color.name} onClick={() => { setDrawColor(color.value); setDrawTool('pencil') }} />)}
+      </div>
       <button className={`btn ${drawTool === 'eraser' ? 'primary' : ''}`} aria-pressed={drawTool === 'eraser'} onClick={() => setDrawTool('eraser')}>⌫ BORRACHA</button>
       <button className="btn" onClick={() => setStrokes((current) => current.slice(0, -1))} disabled={!strokes.length}>↶ DESFAZER</button>
       <button className="btn" onClick={() => setStrokes([])} disabled={!strokes.length}>🗑 LIMPAR</button>
