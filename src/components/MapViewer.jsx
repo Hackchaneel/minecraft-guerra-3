@@ -177,7 +177,7 @@ export default function MapViewer() {
       <button className="btn" onClick={() => setStrokes((current) => current.slice(0, -1))} disabled={!strokes.length}>↶ DESFAZER</button>
       <button className="btn" onClick={() => setStrokes([])} disabled={!strokes.length}>🗑 LIMPAR</button>
     </div>}
-    <div className="mapbox">
+    <div className={`mapbox${mode === 'art' ? ' mapbox-art' : ''}`}>
       <div className="viewport" ref={viewport}
         onWheel={(e) => zoom(e.deltaY < 0 ? 0.15 : -0.15)}
         onPointerDown={(e) => { drag.current = { pointerId: e.pointerId, startX: e.clientX, startY: e.clientY, originX: t.x, originY: t.y, lastX: t.x, lastY: t.y }; mapImage.current?.classList.add('is-dragging') }}
@@ -199,6 +199,7 @@ export default function MapViewer() {
         </div>
         <div className="zoombtns"><button onClick={() => zoom(0.3)}>＋</button><button onClick={() => zoom(-0.3)}>－</button><button onClick={() => setT({ x: 0, y: 0, s: 1 })}>⟲</button></div>
       </div>
+      {mode === 'names' && <>
       <aside className="card info world-island-preview" style={{ '--island-color': islandColors[sel.name] ?? '#5ecbff' }}>
         <img className="world-island-preview-art" src={'/roulette-islands/' + islandArt[sel.name] + '.webp'} alt="" />
         <div className="world-island-preview-copy">
@@ -258,5 +259,6 @@ export default function MapViewer() {
           </div>
         </article>
       </dialog>
+      </>}
     </div></>)
 }

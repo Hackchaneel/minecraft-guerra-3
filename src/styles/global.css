@@ -44,6 +44,7 @@ main{position:relative;max-width:1100px;margin:0 auto;padding:0 1rem}
 @keyframes pop{from{transform:scale(.6);opacity:0}}
 .history{width:100%;max-width:420px;min-height:108px}.empty{text-align:center;margin-top:1.5rem}
 .mapbox{display:grid;grid-template-columns:2fr 1fr;gap:1rem}
+.mapbox-art{grid-template-columns:1fr}
 .viewport{position:relative;aspect-ratio:16/9;overflow:hidden;border:1px solid var(--line);border-radius:8px;background:#030812;cursor:grab;touch-action:none}
 .mapimg{position:absolute;inset:0;transform-origin:center;transition:transform .75s cubic-bezier(.2,.75,.2,1);will-change:transform;background:repeating-linear-gradient(45deg,#0a1a33,#0a1a33 20px,#0c2040 20px,#0c2040 40px)}
 .mapimg.is-dragging{transition:none}
