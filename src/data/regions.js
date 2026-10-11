@@ -46,7 +46,46 @@ export const regions = [
       { title: 'Terreno Labiríntico', text: 'Fendas e valas perfeitas para emboscadas, porém difíceis para fugas rápidas.' },
     ],
   }),
-  r('ilha-dos-segredos', 'Ilha dos Segredos', 57.3, 63.9),
-  r('camocim', 'Camocim', 39.8, 71),
-  r('maca-radiativa', 'Maçã Radiativa', 72, 78.2),
+  r('ilha-dos-segredos', 'Ilha dos Segredos', 57.3, 63.9, {
+    description: 'Uma ilha vasta e central, imponente, nascida da união da antiga Ilha Principal com os territórios verdejantes da Ilha da Paz. A violência do cataclismo ergueu novas cadeias de montanhas rochosas sobre o terreno antes pacífico, criando uma mistura complexa de vales arborizados e picos elevados repletos de mistérios ocultos.',
+    resources: [
+      'Madeira e vegetação', 'Carvalho comum', 'Florestas densas', 'Grama e folhagens',
+      'Paredões de montanhas', 'Pedra', 'Cascalho', 'Solo fértil',
+      'Minérios subterrâneos abundantes', 'Recursos básicos variados',
+    ],
+    dangers: '',
+    points: [
+      { title: 'Picos Montanhosos Recém-Gerados', text: 'Elevações rochosas criadas pela pressão da colisão, ótimas para postos de vigia com visão privilegiada de várias ilhas ao redor.' },
+      { title: 'Vales Ocultos (O Legado da Paz)', text: 'Áreas reclusas entre as montanhas que mantêm a serenidade da antiga Ilha da Paz, ideais para bases escondidas e protegidas de ataques diretos.' },
+      { title: 'Posição Central Estratégica', text: 'No coração do mapa, serve como ponto de passagem crucial. A alta visibilidade e a proximidade com a perigosa Ruína dos Cristais exigem cautela.' },
+    ],
+  }),
+  r('camocim', 'Camocim', 39.8, 71, {
+    description: 'Uma imensa e árida extensão de dunas e areia, nascida da colisão violenta entre o antigo Deserto, resquícios das Terras Áridas e os restos soterrados do antigo Pântano. O relevo é predominantemente plano e arenoso nas dunas centrais, mas cercado por formações rochosas e encostas secas nas bordas, marcadas pelo contraste do cataclismo tectônico.',
+    resources: [
+      'Terreno e construção', 'Areia', 'Arenito', 'Terracota', 'Argila das zonas áridas',
+      'Orgânicos e vegetação', 'Cactos', 'Arbustos secos', 'Vegetação pantanosa fossilizada (transição ao sul)',
+      'Minérios subterrâneos comuns', 'Depósitos de cascalho', 'Áreas abertas para coleta rápida de recursos básicos',
+    ],
+    dangers: '',
+    points: [
+      { title: 'As Dunas Centrais', text: 'Grandes extensões abertas e planas oferecem excelente visibilidade, mas deixam qualquer jogador exposto a ataques à distância ou investidas rápidas.' },
+      { title: 'Fronteira com as Terras Áridas', text: 'Encostas rochosas e formações de cânions nas bordas servem como barreiras naturais e abrigos parciais para construções camufladas.' },
+      { title: 'Vestígios do Pântano (Sul)', text: 'Zonas de transição lamacentas e de vegetação escura soterradas pela areia guardam umidade e blocos orgânicos raros em meio ao clima desértico.' },
+    ],
+  }),
+  r('maca-radiativa', 'Maçã Radiativa', 72, 78.2, {
+    description: 'Uma ilha de relevo denso e arborizado, formada pela mutação violenta da antiga Maçã Verde combinada aos resquícios de conhecimento e energia do antigo Lago dos Sábios, tudo corrompido pela radiação dispersa dos cristais. O terreno verdejante e fértil foi parcialmente alterado por manchas amareladas e reações químicas, criando um ecossistema bizarro onde a vegetação antiga tenta resistir à mutação tóxica.',
+    resources: [
+      'Madeira e orgânicos', 'Madeira verde', 'Carvalho', 'Folhas densas', 'Vegetação rasteira mutante',
+      'Terreno e solo', 'Terra rica', 'Grama modificada pela radiação', 'Áreas de argila', 'Depósitos minerais superficiais',
+      'Recursos naturais abundantes para sobrevivência inicial', 'Resíduos radioativos de baixa intensidade',
+    ],
+    dangers: '',
+    points: [
+      { title: 'Bosques Mutantes Densos', text: 'Áreas fechadas de árvores frondosas oferecem camuflagem para construções furtivas e emboscadas, mas dificultam a visão de longo alcance.' },
+      { title: 'O Legado do Lago dos Sábios', text: 'Zonas de águas estagnadas e enigmáticas herdaram resquícios da antiga sabedoria do mapa anterior e servem como pontos de interesse tático.' },
+      { title: 'Margens Acessíveis', text: 'Praias e encostas circulares facilitam o desembarque de barcos e tornam a ilha acessível para quem busca recursos seguros no início do evento.' },
+    ],
+  }),
 ]
