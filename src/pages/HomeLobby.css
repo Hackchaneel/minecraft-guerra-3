@@ -179,6 +179,8 @@
   text-wrap: balance;
 }
 
+.teaser-float-word > span:first-child { margin-right: .12em; }
+
 .teaser-video-frame {
   position: relative;
   width: 100%;

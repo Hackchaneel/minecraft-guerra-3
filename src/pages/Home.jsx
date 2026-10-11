@@ -52,7 +52,7 @@ export default function Home() {
         </div>
       </section>
       <section className="teaser-section" aria-labelledby="teaser-title">
-        <h2 id="teaser-title">Confira o que aconteceu com as ilhas flutuantes no Teaser COLAPSO</h2>
+        <h2 id="teaser-title">Confira o que aconteceu com as ilhas <span className="teaser-float-word" aria-label="flutuantes"><span aria-hidden="true">f</span><span aria-hidden="true">lutuantes</span></span> no Teaser COLAPSO</h2>
         <div className="teaser-video-frame">
           <iframe
             src="https://www.youtube-nocookie.com/embed/eRQuVmEgX7w"
