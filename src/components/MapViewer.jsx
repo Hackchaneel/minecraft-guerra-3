@@ -138,7 +138,26 @@ export default function MapViewer() {
       </div>
       <aside className="card info">
         <h3>{sel.name}</h3>
-        {[['Descrição', sel.description], ['Recursos', sel.resources], ['Perigos', sel.dangers], ['Pontos importantes', sel.points]].map(([k, v]) => (<p key={k}><b>{k}:</b> {v}</p>))}
+        {[
+          ['Descrição', sel.description],
+          ['Recursos', sel.resources],
+          ['Perigos', sel.dangers],
+          ['Pontos importantes', sel.points],
+        ].filter(([, value]) => value && value !== '[PLACEHOLDER]').map(([label, value]) => (
+          <section className="region-info-section" key={label}>
+            <h4>{label}</h4>
+            {Array.isArray(value) ? (
+              <ul>{value.map((item) => (
+                <li key={typeof item === 'string' ? item : item.title}>
+                  {typeof item === 'string' ? item : <><b>{item.title}:</b> {item.text}</>}
+                </li>
+              ))}</ul>
+            ) : <p>{value}</p>}
+          </section>
+        ))}
+        {![sel.description, sel.resources, sel.dangers, sel.points].some((value) => value && value !== '[PLACEHOLDER]') && (
+          <p className="region-info-pending">As informações desta ilha serão adicionadas em breve.</p>
+        )}
       </aside>
     </div></>)
 }

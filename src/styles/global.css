@@ -380,3 +380,13 @@ main.main-wide .assignment-player-editor .player-list{max-height:95px}
 main.main-wide .assignment-wheel-wrap{width:min(420px,88vw);margin:.15rem auto}
 main.main-wide .assignment-instructions{font-size:.9rem}
 @media(max-width:760px){main.main-wide{padding-inline:1rem}main.main-wide .section{padding:1rem 0 1.5rem}main.main-wide .assignment-wheel-wrap{width:min(360px,85vw)}}
+
+.mapbox>.info{max-height:min(72vh,760px);overflow-y:auto;scrollbar-color:#2a4a7a #071226}
+.mapbox>.info>h3{margin:0 0 .75rem;color:var(--ice);font:700 1.45rem/1.2 var(--display,'Courier New',monospace)}
+.region-info-section{margin-top:.85rem;padding-top:.75rem;border-top:1px solid #6fd8ff33}
+.region-info-section h4{margin:0 0 .4rem;color:var(--fire);font:700 1rem/1.25 var(--display,'Courier New',monospace)}
+.region-info-section p,.region-info-section ul{margin:0;color:#c5d5e8;font-size:.92rem;line-height:1.55}
+.region-info-section ul{display:grid;gap:.45rem;padding-left:1.2rem}
+.region-info-section li::marker{color:var(--ice)}
+.region-info-section li b{color:#eaf5ff}
+.region-info-pending{margin:.6rem 0 0;color:#9bb2d0;font-style:italic}
