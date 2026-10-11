@@ -15,6 +15,10 @@ function render(lines) {
 }
 export default function Rules() {
   return (<Section title="REGRAS" subtitle="Informações importantes do Minecraft Guerra 3.">
+    <div className="rules-warning" role="note">
+      <span className="rules-warning-icon" aria-hidden="true">⚠</span>
+      <strong>Atenção! Para participar do Minecraft Guerra 3, é obrigatório a Leitura das Regras.</strong>
+    </div>
     <div className="acc">{rules.map((r, i) => (
       <details key={r.title} className="card" open={i === 0}>
         <summary><span>{r.icon}</span> {i + 1}. {r.title}</summary>
