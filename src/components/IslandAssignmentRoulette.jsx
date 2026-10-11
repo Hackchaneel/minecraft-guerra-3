@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { players as defaultPlayers } from '../data/players.js'
 import { islands } from '../data/islands.js'
 import { regions } from '../data/regions.js'
@@ -148,7 +149,7 @@ export default function IslandAssignmentRoulette() {
 
   return (
     <div className="island-assignment">
-      {result && <div className="assignment-player-reveal" role="status" aria-live="assertive"><span>{result.player}</span></div>}
+      {result && createPortal(<div className="assignment-player-reveal" role="status" aria-live="assertive"><span>{result.player}</span></div>, document.body)}
       <section ref={mapSectionRef} className="assignment-map-section" aria-label="Mapa e distribuição de jogadores">
         <div className="assignment-map-viewport">
           <div
