@@ -51,6 +51,19 @@ export default function Home() {
           <p>{parallaxCopy.text}</p>
         </div>
       </section>
+      <section className="teaser-section" aria-labelledby="teaser-title">
+        <h2 id="teaser-title">Confira o que aconteceu com as ilhas flutuantes no Teaser COLAPSO</h2>
+        <div className="teaser-video-frame">
+          <iframe
+            src="https://www.youtube-nocookie.com/embed/eRQuVmEgX7w"
+            title="Teaser COLAPSO — Minecraft Guerra 3"
+            loading="lazy"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
+        </div>
+      </section>
       <section className="mystery-section" aria-labelledby="mystery-heading">
         <div className="mystery-heading">
           <h2 id="mystery-heading">SEGREDOS DO MG3</h2>
