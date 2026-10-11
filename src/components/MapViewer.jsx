@@ -31,6 +31,36 @@ const islandColors = {
   Camocim: '#e8700a',
   'Maçã Radiativa': '#f0be00',
 }
+const islandOrigins = {
+  'Prepúcio Ártico': [
+    { name: 'Ártico', image: 'artico' },
+    { name: 'Picos da Mixagem', image: 'picos-da-mixagem' },
+  ],
+  'Cordilheira Rachada': [
+    { name: 'Rachada', image: 'rachada' },
+    { name: 'Terras Áridas', image: 'terras-aridas' },
+  ],
+  'Ruína dos Cristais': [
+    { name: 'Ilha Principal (Cristais)', image: 'ilha-principal' },
+    { name: 'Lago dos Sábios', image: 'lago-dos-sabios' },
+  ],
+  'Triatlo Infernal': [
+    { name: 'Vulcão Infernal', image: 'vulcao-infernal' },
+    { name: 'Terras Áridas', image: 'terras-aridas' },
+  ],
+  Camocim: [
+    { name: 'Deserto', image: 'deserto' },
+    { name: 'Terras Áridas', image: 'terras-aridas' },
+  ],
+  'Maçã Radiativa': [
+    { name: 'Maçã Verde', image: 'maca-verde' },
+    { name: 'Lago dos Sábios', image: 'lago-dos-sabios' },
+  ],
+  'Ilha dos Segredos': [
+    { name: 'Ilha Principal', image: 'ilha-principal' },
+    { name: 'Ilha da Paz', image: 'ilha-da-paz' },
+  ],
+}
 export default function MapViewer() {
   const [t, setT] = useState({ x: 0, y: 0, s: 1 })
   const [sel, setSel] = useState(regions[0])
@@ -194,6 +224,18 @@ export default function MapViewer() {
                 : <p className="region-info-pending">O texto desta ilha ainda não foi adicionado.</p>}
             </div>
           </header>
+          <section className="world-island-origins" aria-label="Ilhas de origem no Minecraft Guerra 2">
+            <h3>Formada pela junção de ilhas do MG2</h3>
+            <div className="world-island-origin-pair">
+              {(islandOrigins[sel.name] ?? []).map((origin, index) => <div className="world-island-origin-group" key={origin.image + origin.name}>
+                {index > 0 && <span className="world-island-origin-plus" aria-hidden="true">+</span>}
+                <figure className="world-island-origin">
+                  <img src={`/mg2-islands/${origin.image}.png`} alt={`Recorte da ilha ${origin.name} no mapa MG2`} />
+                  <figcaption>{origin.name}</figcaption>
+                </figure>
+              </div>)}
+            </div>
+          </section>
           <div className="world-island-card-details">
             <section>
               <h3>Recursos</h3>

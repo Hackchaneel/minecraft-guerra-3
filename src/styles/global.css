@@ -412,6 +412,14 @@ main.main-wide .assignment-instructions{font-size:.9rem}
 .world-island-card-header img{width:150px;height:130px;object-fit:contain;filter:drop-shadow(0 6px 10px #000)}
 .world-island-card-header h2{margin:0 0 6px;color:#fff;font:700 clamp(1.7rem,4vw,1.9rem)/1.2 var(--display,'Courier New',monospace)}
 .world-island-card-header p{max-width:62ch;color:#e8f1fa;font-size:1rem;line-height:1.65}
+.world-island-origins{padding:18px 22px 4px;border-top:1px solid #6fd8ff2b}
+.world-island-origins>h3{margin:0 0 12px;color:var(--ice);font:700 .9rem/1.35 var(--display,'Courier New',monospace);letter-spacing:.08em;text-transform:uppercase}
+.world-island-origin-pair{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
+.world-island-origin-group{display:flex;align-items:center;gap:16px}
+.world-island-origin{display:grid;justify-items:center;gap:7px;width:clamp(145px,25vw,220px);margin:0;padding:9px;border:1px solid var(--island-color,#2a6aa8);background:linear-gradient(145deg,#112947,#081426);box-shadow:0 5px 14px #0005}
+.world-island-origin img{display:block;width:100%;height:112px;object-fit:contain;image-rendering:auto}
+.world-island-origin figcaption{color:#eaf6ff;font:700 .76rem/1.35 var(--display,'Courier New',monospace);text-align:center}
+.world-island-origin-plus{color:var(--ice);font:700 1.8rem/1 var(--display,'Courier New',monospace);text-shadow:0 0 12px #5ecbff88}
 .world-island-card-details{display:grid;grid-template-columns:1fr 1.1fr;gap:24px;padding:22px}
 .world-island-card-details section{min-width:0}
 .world-island-card-details h3{margin:0 0 10px;color:var(--fire);font:700 .86rem/1.3 var(--display,'Courier New',monospace);letter-spacing:.14em;text-transform:uppercase}
@@ -422,4 +430,4 @@ main.main-wide .assignment-instructions{font-size:.9rem}
 .world-island-point b{color:#ffd7a8;font-size:.9rem}
 .world-island-point span,.world-island-card-details>section>p{color:#c7d8e8;font-size:.9rem;line-height:1.5}
 @media(max-width:860px){.world-island-card-details{grid-template-columns:1fr}.world-island-card-header{grid-template-columns:1fr}.world-island-card-header img{width:100px;height:90px}}
-@media(max-width:600px){.mapbox>.world-island-preview{grid-template-columns:48px minmax(0,1fr);gap:9px;padding:10px}.world-island-preview-art{width:48px;height:48px}.world-island-preview-copy h3{font-size:1rem}.world-island-preview-copy p{font-size:.82rem}.world-island-card-header,.world-island-card-details{padding:16px}.world-island-dialog{max-height:92vh}}
+@media(max-width:600px){.mapbox>.world-island-preview{grid-template-columns:48px minmax(0,1fr);gap:9px;padding:10px}.world-island-preview-art{width:48px;height:48px}.world-island-preview-copy h3{font-size:1rem}.world-island-preview-copy p{font-size:.82rem}.world-island-card-header,.world-island-card-details,.world-island-origins{padding:16px}.world-island-origin-pair,.world-island-origin-group{gap:9px}.world-island-origin{width:clamp(125px,38vw,180px);padding:7px}.world-island-origin img{height:90px}.world-island-dialog{max-height:92vh}}
