@@ -62,10 +62,13 @@ const islandOrigins = {
   ],
 }
 const islandBackgrounds = {
+  'Prepúcio Ártico': 'prepucio-artico.jpg',
   'Cordilheira Rachada': 'cordilheira-rachada.jpg',
   'Triatlo Infernal': 'triatlo-infernal.jpg',
   Camocim: 'camocim.jpg',
   'Ruína dos Cristais': 'ruina-dos-cristais.jpg',
+  'Maçã Radiativa': 'maca-radiativa.jpg',
+  'Ilha dos Segredos': 'ilha-dos-segredos.jpg',
 }
 export default function MapViewer() {
   const [t, setT] = useState({ x: 0, y: 0, s: 1 })
