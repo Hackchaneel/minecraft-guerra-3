@@ -3,12 +3,31 @@ import { regions } from '../data/regions.js'
 const maps = { names: ['Mapa com nomes', './mapa.webp'], art: ['Mapa ilustrado', './mapa-ilustrado.jpg'] }
 const CANVAS_WIDTH = 1200
 const CANVAS_HEIGHT = 675
+const islandArt = {
+  'Prepúcio Ártico': 'prepucio-artico',
+  'Cordilheira Rachada': 'cordilheira-rachada',
+  'Triatlo Infernal': 'triatlo-infernal',
+  'Ruína dos Cristais': 'ruina-dos-cristais',
+  'Ilha dos Segredos': 'ilha-dos-segredos',
+  Camocim: 'camocim',
+  'Maçã Radiativa': 'maca-radiativa',
+}
+const islandColors = {
+  'Prepúcio Ártico': '#1f74e8',
+  'Cordilheira Rachada': '#13a84c',
+  'Triatlo Infernal': '#d3181c',
+  'Ruína dos Cristais': '#8a2be2',
+  'Ilha dos Segredos': '#0e8f46',
+  Camocim: '#e8700a',
+  'Maçã Radiativa': '#f0be00',
+}
 export default function MapViewer() {
   const [t, setT] = useState({ x: 0, y: 0, s: 1 })
   const [sel, setSel] = useState(regions[0])
   const [mode, setMode] = useState('names')
   const [drawTool, setDrawTool] = useState('pencil')
   const [strokes, setStrokes] = useState([])
+  const detailDialog = useRef(null)
   const drag = useRef(null)
   const viewport = useRef(null)
   const mapImage = useRef(null)
@@ -136,28 +155,52 @@ export default function MapViewer() {
         </div>
         <div className="zoombtns"><button onClick={() => zoom(0.3)}>＋</button><button onClick={() => zoom(-0.3)}>－</button><button onClick={() => setT({ x: 0, y: 0, s: 1 })}>⟲</button></div>
       </div>
-      <aside className="card info">
-        <h3>{sel.name}</h3>
-        {[
-          ['Descrição', sel.description],
-          ['Recursos', sel.resources],
-          ['Perigos', sel.dangers],
-          ['Pontos importantes', sel.points],
-        ].filter(([, value]) => value && value !== '[PLACEHOLDER]').map(([label, value]) => (
-          <section className="region-info-section" key={label}>
-            <h4>{label}</h4>
-            {Array.isArray(value) ? (
-              <ul>{value.map((item) => (
-                <li key={typeof item === 'string' ? item : item.title}>
-                  {typeof item === 'string' ? item : <><b>{item.title}:</b> {item.text}</>}
-                </li>
-              ))}</ul>
-            ) : <p>{value}</p>}
-          </section>
-        ))}
-        {![sel.description, sel.resources, sel.dangers, sel.points].some((value) => value && value !== '[PLACEHOLDER]') && (
-          <p className="region-info-pending">As informações desta ilha serão adicionadas em breve.</p>
-        )}
+      <aside className="card info world-island-preview" style={{ '--island-color': islandColors[sel.name] ?? '#5ecbff' }}>
+        <img className="world-island-preview-art" src={'/roulette-islands/' + islandArt[sel.name] + '.webp'} alt="" />
+        <div className="world-island-preview-copy">
+          <h3>{sel.name}</h3>
+          {sel.description && sel.description !== '[PLACEHOLDER]'
+            ? <p>{sel.description.split(/(?<=[.!?])\s+/)[0]}</p>
+            : <p className="region-info-pending">As informações desta ilha serão adicionadas em breve.</p>}
+        </div>
+        <button className="world-island-open" type="button" onClick={() => detailDialog.current?.showModal()}>
+          ABRIR FICHA
+        </button>
       </aside>
+
+      <dialog ref={detailDialog} className="world-island-dialog" style={{ '--island-color': islandColors[sel.name] ?? '#5ecbff' }} onClick={(event) => { if (event.target === detailDialog.current) detailDialog.current.close() }}>
+        <button className="world-island-close" type="button" aria-label="Fechar ficha" onClick={() => detailDialog.current?.close()}>×</button>
+        <article className="world-island-card">
+          <header className="world-island-card-header">
+            <img src={'/roulette-islands/' + islandArt[sel.name] + '.webp'} alt={'Ilustração de ' + sel.name} />
+            <div>
+              <h2>{sel.name}</h2>
+              {sel.description && sel.description !== '[PLACEHOLDER]'
+                ? <p>{sel.description}</p>
+                : <p className="region-info-pending">O texto desta ilha ainda não foi adicionado.</p>}
+            </div>
+          </header>
+          <div className="world-island-card-details">
+            <section>
+              <h3>Recursos</h3>
+              {Array.isArray(sel.resources) && sel.resources.length
+                ? <ul className="world-island-chips">{sel.resources.map((resource) => <li key={resource}>{resource}</li>)}</ul>
+                : <p className="region-info-pending">Em breve.</p>}
+            </section>
+            {sel.dangers && sel.dangers !== '[PLACEHOLDER]' && <section>
+              <h3>Perigos</h3>
+              {Array.isArray(sel.dangers)
+                ? <div className="world-island-points">{sel.dangers.map((point) => <div className="world-island-point" key={point.title}><b>{point.title}</b><span>{point.text}</span></div>)}</div>
+                : <p>{sel.dangers}</p>}
+            </section>}
+            <section>
+              <h3>Pontos importantes</h3>
+              {Array.isArray(sel.points) && sel.points.length
+                ? <div className="world-island-points">{sel.points.map((point) => <div className="world-island-point" key={point.title}><b>{point.title}</b><span>{point.text}</span></div>)}</div>
+                : <p className="region-info-pending">Em breve.</p>}
+            </section>
+          </div>
+        </article>
+      </dialog>
     </div></>)
 }
