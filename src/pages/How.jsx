@@ -120,7 +120,7 @@ export default function How() {
 
         <p className="how-page-closing">Nos vemos no campo de batalha!</p>
         <div className="how-additional-info" aria-label="Informações adicionais">
-          <span>Versão do servidor: <strong>a confirmar</strong></span>
+          <span>Versão do servidor: <strong>1.20.6</strong></span>
           <span>Mods: <strong>Small Ships · Simple Voice Chat</strong></span>
         </div>
       </div>
