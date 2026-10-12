@@ -303,8 +303,8 @@ export default function MapViewer() {
         <h3>Spawns para construir navios</h3>
         <p className="craft-intro">O mapa mostra os pontos de coleta dos materiais necessários para fabricar os navios.</p>
         <div className="craft-spawn-legend">
-          <article className="craft-spawn-item"><span className="craft-spawn-dot slime" aria-hidden="true" /><div><h4>Spawn de Slime</h4><p>Nas áreas marcadas em verde: Cordilheira Rachada, Triatlo Infernal, Ruína dos Cristais e Camocim.</p></div></article>
-          <article className="craft-spawn-item"><span className="craft-spawn-dot spider" aria-hidden="true" /><div><h4>Spawn de Aranha</h4><p>Na área escura marcada na Ilha dos Segredos.</p></div></article>
+          <article className="craft-spawn-item"><span className="craft-spawn-dot slime" aria-hidden="true" /><div><h4>Spawn de Slime</h4><p>Nas áreas marcadas em verde: Cordilheira Rachada, Triatlo Infernal, Ruína dos Cristais, Camocim e Ilha dos Segredos.</p></div></article>
+          <article className="craft-spawn-item"><span className="craft-spawn-dot spider" aria-hidden="true" /><div><h4>Spawn de Aranha</h4><p>Na Ilha dos Segredos e também na Maçã Radioativa.</p></div></article>
         </div>
       </div>
       <div className="craft-recipe-group">
