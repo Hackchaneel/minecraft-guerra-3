@@ -5,6 +5,8 @@ import { useEffect, useRef } from 'react'
 const MAX = 8
 export default function ParallaxHeroImages({ images = [], className = '', imageClassName = '', variant = 'default' }) {
   const ref = useRef(null)
+  const frame = useRef(null)
+  const pointer = useRef({ x: 0, y: 0 })
   const list = images.slice(0, MAX)
   const n = list.length
   useEffect(() => {
@@ -12,16 +14,31 @@ export default function ParallaxHeroImages({ images = [], className = '', imageC
     if (!el) return
     const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { el.classList.add('phi-in'); io.disconnect() } }, { threshold: 0.15 })
     io.observe(el)
-    return () => io.disconnect()
+    return () => {
+      io.disconnect()
+      if (frame.current !== null) cancelAnimationFrame(frame.current)
+    }
   }, [])
   const setPointer = (x, y) => { ref.current?.style.setProperty('--mx', x); ref.current?.style.setProperty('--my', y) }
   const onMove = (e) => {
     const r = ref.current.getBoundingClientRect()
-    setPointer(((e.clientX - r.left) / r.width - 0.5) * 2, ((e.clientY - r.top) / r.height - 0.5) * 2)
+    pointer.current.x = ((e.clientX - r.left) / r.width - 0.5) * 2
+    pointer.current.y = ((e.clientY - r.top) / r.height - 0.5) * 2
+    if (frame.current !== null) return
+    frame.current = requestAnimationFrame(() => {
+      setPointer(pointer.current.x, pointer.current.y)
+      frame.current = null
+    })
+  }
+  const onLeave = () => {
+    if (frame.current !== null) cancelAnimationFrame(frame.current)
+    frame.current = null
+    pointer.current = { x: 0, y: 0 }
+    setPointer(0, 0)
   }
   const mid = (n - 1) / 2
   return (
-    <div ref={ref} className={`phi ${className}`} onPointerMove={onMove} onPointerLeave={() => setPointer(0, 0)} aria-hidden>
+    <div ref={ref} className={`phi ${className}`} onPointerMove={onMove} onPointerLeave={onLeave} aria-hidden>
       {list.map((src, i) => {
         const dist = mid ? Math.abs(i - mid) / mid : 0
         const closeness = variant === 'edge-focus' ? dist : 1 - dist

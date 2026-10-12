@@ -199,6 +199,23 @@
   border: 0;
 }
 
+.teaser-preview {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  background: #02060d;
+  cursor: pointer;
+}
+
+.teaser-preview img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.teaser-play-icon { position: absolute; top: 50%; left: 50%; display: grid; place-items: center; width: 68px; height: 48px; padding-left: 4px; transform: translate(-50%,-50%); border-radius: 14px; background: #f00; color: #fff; font: 1.35rem/1 system-ui,sans-serif; box-shadow: 0 4px 14px #0008; transition: transform .18s,background-color .18s; }
+.teaser-preview:hover .teaser-play-icon,.teaser-preview:focus-visible .teaser-play-icon { transform: translate(-50%,-50%) scale(1.08); background: #d90000; }
+.teaser-preview:focus-visible { outline: 3px solid #fff; outline-offset: -5px; }
+
 @media (max-width: 860px) {
   .lobby-frame { left: auto; width: 100%; grid-template-columns: 1fr; gap: 22px; padding: 16px; }
   .lobby-side h2 { font-size: clamp(1.7rem, 7vw, 2.2rem); }
@@ -214,4 +231,5 @@
 @media (prefers-reduced-motion: reduce) {
   .lobby-world-art img { transition: none; }
   .lobby-shortcut { transition: none; }
+  .teaser-play-icon { transition: none; }
 }

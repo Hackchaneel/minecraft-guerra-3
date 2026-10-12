@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import ParallaxHeroImages from '../components/ParallaxHeroImages.jsx'
 import MysteryCarousel from '../components/MysteryCarousel.jsx'
@@ -15,6 +16,7 @@ function ShortcutIcon({ type }) {
 }
 
 export default function Home() {
+  const [teaserPlaying, setTeaserPlaying] = useState(false)
   return (<div className="home-page"><div className="home-content">
       <Link className="story-announcement" to="/historia">
         <span className="story-announcement-icon" aria-hidden="true">📕</span>
@@ -54,14 +56,17 @@ export default function Home() {
       <section className="teaser-section" aria-labelledby="teaser-title">
         <h2 id="teaser-title">Confira o que aconteceu com as ilhas <span className="teaser-float-word" aria-label="flutuantes"><span aria-hidden="true">f</span><span aria-hidden="true">lutuantes</span></span> no Teaser COLAPSO</h2>
         <div className="teaser-video-frame">
-          <iframe
-            src="https://www.youtube-nocookie.com/embed/eRQuVmEgX7w"
-            title="Teaser COLAPSO — Minecraft Guerra 3"
-            loading="lazy"
-            referrerPolicy="strict-origin-when-cross-origin"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
-          />
+          {teaserPlaying ? <iframe
+              src="https://www.youtube-nocookie.com/embed/eRQuVmEgX7w?autoplay=1"
+              title="Teaser COLAPSO — Minecraft Guerra 3"
+              loading="lazy"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            /> : <button className="teaser-preview" type="button" onClick={() => setTeaserPlaying(true)} aria-label="Reproduzir Teaser COLAPSO">
+              <img src="https://img.youtube.com/vi/eRQuVmEgX7w/hqdefault.jpg" alt="" loading="lazy" decoding="async" />
+              <span className="teaser-play-icon" aria-hidden="true">▶</span>
+            </button>}
         </div>
       </section>
       <section className="mystery-section" aria-labelledby="mystery-heading">
