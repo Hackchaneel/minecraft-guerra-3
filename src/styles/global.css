@@ -47,6 +47,27 @@ main{position:relative;max-width:1100px;margin:0 auto;padding:0 1rem}
 .history{width:100%;max-width:420px;min-height:108px}.empty{text-align:center;margin-top:1.5rem}
 .mapbox{display:grid;grid-template-columns:2fr 1fr;gap:1rem}
 .mapbox-art{grid-template-columns:1fr}
+.mapbox-craft{grid-template-columns:minmax(0,1fr)}
+.mapbox-craft>.viewport{width:100%;max-width:1200px;margin:0 auto}
+.world-map-tabs{flex-wrap:wrap}
+.world-map-tabs [aria-pressed="true"]{box-shadow:4px 4px 0 #000b,0 0 16px #6fd8ff33}
+.craft-small-ships-content{display:grid;gap:1.25rem;width:min(100%,1200px);margin:1.4rem auto 0}
+.craft-spawn-guide,.craft-recipe-group{min-width:0;padding:clamp(1rem,2vw,1.4rem);border:1px solid #244774;background:linear-gradient(145deg,#0c1c35ed,#071226f5);box-shadow:0 8px 24px #0005}
+.craft-spawn-guide h3,.craft-recipe-group h3{margin:0 0 .65rem;color:var(--ice);font:700 1.35rem/1.2 var(--display,'Courier New',monospace);letter-spacing:.04em}
+.craft-intro{margin:.25rem 0 1rem;color:#b8cbe0;line-height:1.5}
+.craft-spawn-legend{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem}
+.craft-spawn-item{display:grid;grid-template-columns:24px minmax(0,1fr);align-items:start;gap:.8rem;padding:.9rem;border:1px solid #2a4a7a66;background:#071226a8}
+.craft-spawn-item h4{margin:0 0 .3rem;color:#fff;font:700 1rem/1.3 var(--display,'Courier New',monospace)}
+.craft-spawn-item p{margin:0;color:#bdcde0;line-height:1.5}
+.craft-spawn-dot{width:20px;height:20px;margin-top:.1rem;border:2px solid #dbe7f5;border-radius:4px;box-shadow:0 0 12px currentColor}
+.craft-spawn-dot.slime{background:#00d84b;color:#00d84b}
+.craft-spawn-dot.spider{background:#080b10;color:#8a99aa}
+.craft-recipe-grid{display:grid;gap:.8rem}
+.craft-recipe-grid.ships{grid-template-columns:repeat(3,minmax(0,1fr))}
+.craft-recipe-grid.weapons{grid-template-columns:repeat(2,minmax(0,1fr));max-width:800px}
+.craft-recipe{min-width:0;margin:0;padding:.75rem;border:1px solid #2a4a7a;background:#050d1c;text-align:center}
+.craft-recipe figcaption{margin:0 0 .6rem;color:#e7f3ff;font:700 .95rem/1.3 var(--display,'Courier New',monospace)}
+.craft-recipe img{display:block;width:100%;height:auto;max-height:230px;object-fit:contain;background:#262626}
 .viewport{position:relative;aspect-ratio:16/9;overflow:hidden;border:1px solid var(--line);border-radius:8px;background:#030812;cursor:grab;touch-action:none}
 .mapimg{position:absolute;inset:0;transform-origin:center;transition:transform .75s cubic-bezier(.2,.75,.2,1);will-change:transform;background:repeating-linear-gradient(45deg,#0a1a33,#0a1a33 20px,#0c2040 20px,#0c2040 40px)}
 .mapimg.is-dragging{transition:none}
@@ -66,6 +87,7 @@ main{position:relative;max-width:1100px;margin:0 auto;padding:0 1rem}
 .coming-soon-message h1{margin:0;color:#fff;font-family:var(--display,'Courier New',monospace);font-size:clamp(3.2rem,12vw,8rem);letter-spacing:.09em;line-height:1.1;text-shadow:0 0 12px #fff8,0 0 38px #6fd8ff88}
 .coming-soon-message p{margin:1rem 0 0;color:#fff;font-family:var(--body,system-ui,sans-serif);font-size:clamp(1.05rem,2.8vw,1.65rem);font-weight:500}
 @media(max-width:860px){.burger{display:block}.nav nav{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;background:#050b17f5;padding:1rem;gap:.8rem}.nav nav.open{display:flex}.mapbox{grid-template-columns:1fr}}
+@media(max-width:700px){.craft-spawn-legend{grid-template-columns:1fr}.craft-recipe-grid.ships{grid-template-columns:1fr}.craft-recipe-grid.weapons{grid-template-columns:1fr}.craft-recipe img{max-height:260px}}
 
 .hero{margin:0 -1rem;padding:0 0 2rem;text-align:center;display:flex;flex-direction:column;align-items:center;gap:.6rem;background:linear-gradient(#0000,#050b17 90%)}
 .banner{width:100%;display:block;max-height:75vh;object-fit:cover}

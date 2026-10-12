@@ -1,6 +1,19 @@
 import { useEffect, useRef, useState } from 'react'
 import { regions } from '../data/regions.js'
-const maps = { names: ['Mapa com nomes', './mapa.webp'], art: ['Mapa ilustrado', './mapa-ilustrado.jpg'] }
+const maps = {
+  names: ['Mapa com nomes', './mapa.webp'],
+  art: ['Mapa ilustrado', './mapa-ilustrado.jpg'],
+  craft: ['Mapa de spawns de Slime e Aranha', './spawns-slime-aranha.jpg'],
+}
+const shipCrafts = [
+  { title: 'Navio — receita 1', image: '/craft-navio-1.png' },
+  { title: 'Navio — receita 2', image: '/craft-navio-2.png' },
+  { title: 'Navio — receita 3', image: '/craft-navio-3.png' },
+]
+const weaponCrafts = [
+  { title: 'Canhão', image: '/craft-canhao.png' },
+  { title: 'Bala de canhão', image: '/craft-bala-canhao.png' },
+]
 const CANVAS_WIDTH = 1200
 const CANVAS_HEIGHT = 675
 const pencilColors = [
@@ -91,6 +104,11 @@ export default function MapViewer() {
   const drawingPointer = useRef(null)
   const activeStroke = useRef(null)
   const zoom = (d) => setT((p) => ({ ...p, s: Math.min(4, Math.max(0.6, p.s + d)) }))
+  const changeMode = (nextMode) => {
+    drag.current = null
+    setT({ x: 0, y: 0, s: 1 })
+    setMode(nextMode)
+  }
   const focusRegion = (region) => {
     setSel(region)
     drag.current = null
@@ -181,7 +199,11 @@ export default function MapViewer() {
     setT((current) => ({ ...current, x: currentDrag.lastX, y: currentDrag.lastY }))
   }
   return (<>
-    <div className="row"><button className={`btn ${mode === 'names' ? 'primary' : ''}`} onClick={() => setMode('names')}>MAPA COM NOMES</button><button className={`btn ${mode === 'art' ? 'primary' : ''}`} onClick={() => setMode('art')}>MAPA ILUSTRADO</button></div>
+    <div className="row world-map-tabs" role="group" aria-label="Conteúdo do mundo">
+      <button type="button" className={`btn ${mode === 'names' ? 'primary' : ''}`} aria-pressed={mode === 'names'} onClick={() => changeMode('names')}>MAPA COM NOMES</button>
+      <button type="button" className={`btn ${mode === 'art' ? 'primary' : ''}`} aria-pressed={mode === 'art'} onClick={() => changeMode('art')}>MAPA ILUSTRADO</button>
+      <button type="button" className={`btn ${mode === 'craft' ? 'primary' : ''}`} aria-pressed={mode === 'craft'} onClick={() => changeMode('craft')}>CRAFT SMALL SHIPS</button>
+    </div>
     {mode === 'art' && <div className="row map-tools" role="toolbar" aria-label="Ferramentas de desenho do mapa">
       <button className={`btn ${drawTool === 'pan' ? 'primary' : ''}`} aria-pressed={drawTool === 'pan'} onClick={() => setDrawTool('pan')}>✋ MOVER</button>
       <button className={`btn ${drawTool === 'pencil' ? 'primary' : ''}`} aria-pressed={drawTool === 'pencil'} onClick={() => setDrawTool('pencil')}>✏️ LÁPIS</button>
@@ -192,7 +214,7 @@ export default function MapViewer() {
       <button className="btn" onClick={() => setStrokes((current) => current.slice(0, -1))} disabled={!strokes.length}>↶ DESFAZER</button>
       <button className="btn" onClick={() => setStrokes([])} disabled={!strokes.length}>🗑 LIMPAR</button>
     </div>}
-    <div className={`mapbox${mode === 'art' ? ' mapbox-art' : ''}`}>
+    <div className={`mapbox${mode === 'art' ? ' mapbox-art' : ''}${mode === 'craft' ? ' mapbox-craft' : ''}`}>
       <div className="viewport" ref={viewport}
         onWheel={(e) => zoom(e.deltaY < 0 ? 0.15 : -0.15)}
         onPointerDown={(e) => { drag.current = { pointerId: e.pointerId, startX: e.clientX, startY: e.clientY, originX: t.x, originY: t.y, lastX: t.x, lastY: t.y }; mapImage.current?.classList.add('is-dragging') }}
@@ -205,7 +227,7 @@ export default function MapViewer() {
         }}
         onPointerUp={finishDrag} onPointerCancel={finishDrag} onPointerLeave={finishDrag}>
         <div ref={mapImage} className="mapimg" style={{ transform: `translate(${t.x}px,${t.y}px) scale(${t.s})`, '--s': t.s }}>
-          <img src={maps[mode][1]} alt={maps[mode][0]} draggable={false} style={{ objectFit: mode === 'art' ? 'contain' : 'fill' }} />
+          <img src={maps[mode][1]} alt={maps[mode][0]} draggable={false} style={{ objectFit: mode === 'names' ? 'fill' : 'contain' }} />
           {mode === 'art' && <canvas ref={canvas} className={`draw-canvas ${drawTool === 'pan' ? 'pan' : ''}`} width={CANVAS_WIDTH} height={CANVAS_HEIGHT} aria-label="Área para desenhar no mapa" onPointerDown={startDrawing} onPointerMove={continueDrawing} onPointerUp={stopDrawing} onPointerCancel={stopDrawing} />}
           {mode === 'names' && regions.map((r) => (
             <button key={r.id} className={`pin ${r.special ? 'special' : ''} ${sel.id === r.id ? 'on' : ''}`} style={{ left: r.x + '%', top: r.y + '%' }}
@@ -275,5 +297,28 @@ export default function MapViewer() {
         </article>
       </dialog>
       </>}
-    </div></>)
+    </div>
+    {mode === 'craft' && <section className="craft-small-ships-content" aria-label="Spawns e receitas dos navios">
+      <div className="craft-spawn-guide">
+        <h3>Spawns para construir navios</h3>
+        <p className="craft-intro">O mapa mostra os pontos de coleta dos materiais necessários para fabricar os navios.</p>
+        <div className="craft-spawn-legend">
+          <article className="craft-spawn-item"><span className="craft-spawn-dot slime" aria-hidden="true" /><div><h4>Spawn de Slime</h4><p>Nas áreas marcadas em verde: Cordilheira Rachada, Triatlo Infernal, Ruína dos Cristais e Camocim.</p></div></article>
+          <article className="craft-spawn-item"><span className="craft-spawn-dot spider" aria-hidden="true" /><div><h4>Spawn de Aranha</h4><p>Na área escura marcada na Ilha dos Segredos.</p></div></article>
+        </div>
+      </div>
+      <div className="craft-recipe-group">
+        <h3>Craft Small Ships</h3>
+        <div className="craft-recipe-grid ships">
+          {shipCrafts.map((craft) => <figure className="craft-recipe" key={craft.image}><figcaption>{craft.title}</figcaption><img src={craft.image} alt={`Receita de criação: ${craft.title}`} loading="lazy" /></figure>)}
+        </div>
+      </div>
+      <div className="craft-recipe-group">
+        <h3>Crafts de combate naval</h3>
+        <div className="craft-recipe-grid weapons">
+          {weaponCrafts.map((craft) => <figure className="craft-recipe" key={craft.image}><figcaption>{craft.title}</figcaption><img src={craft.image} alt={`Receita de criação: ${craft.title}`} loading="lazy" /></figure>)}
+        </div>
+      </div>
+    </section>}
+    </>)
 }
