@@ -46,6 +46,10 @@ function rouletteSlicePath(index, count, radius = 235) {
   return `M 250 250 L ${x1} ${y1} A ${radius} ${radius} 0 0 1 ${x2} ${y2} Z`
 }
 
+function readLastSeenSpinId() {
+  try { return window.localStorage.getItem('mg3:last-seen-spin') } catch { return null }
+}
+
 export default function IslandAssignmentRoulette() {
   const [players, setPlayers] = useState(defaultPlayers)
   const [assignments, setAssignments] = useState([])
@@ -53,6 +57,7 @@ export default function IslandAssignmentRoulette() {
   const [editMessage, setEditMessage] = useState('')
   const [rotation, setRotation] = useState(0)
   const [spinning, setSpinning] = useState(false)
+  const [spinDuration, setSpinDuration] = useState(4200)
   const [result, setResult] = useState(null)
   const [spotlightRegionId, setSpotlightRegionId] = useState(null)
   const [adminKey] = useState(() => window.sessionStorage.getItem(ADMIN_KEY_STORAGE) ?? '')
@@ -64,28 +69,51 @@ export default function IslandAssignmentRoulette() {
   const selectionSoundRef = useRef(null)
   const lastPlayerSoundRef = useRef(null)
   const revealTimers = useRef([])
-  const seenSpinIdRef = useRef(null)
+  const seenSpinIdRef = useRef(readLastSeenSpinId())
 
   useEffect(() => () => revealTimers.current.forEach((timer) => window.clearTimeout(timer)), [])
 
-  const applySharedState = useCallback((row) => {
+  const applySharedState = useCallback((row, animateSpin = true) => {
     if (!row) return
     const nextPlayers = Array.isArray(row.players) ? row.players : defaultPlayers
     const nextAssignments = Array.isArray(row.assignments) ? row.assignments : []
     setPlayers(nextPlayers)
     setAssignments(nextAssignments)
+    const spinEvent = row.last_spin
+    const spinId = spinEvent?.id
+    const eventAlreadySeen = spinId && seenSpinIdRef.current === spinId
+    const eventAge = spinEvent?.startedAt
+      ? Math.max(0, Date.now() - new Date(spinEvent.startedAt).getTime())
+      : Infinity
+    const lockRemaining = row.lock_until
+      ? new Date(row.lock_until).getTime() - Date.now()
+      : 0
+    const shouldAnimate = Boolean(
+      spinId && animateSpin && !eventAlreadySeen && eventAge < 4200 && lockRemaining > 0,
+    )
+
     setRotation(Number(row.rotation) || 0)
     setSharedStatus('Roleta sincronizada em tempo real.')
 
-    const spinEvent = row.last_spin
-    if (!spinEvent?.id || seenSpinIdRef.current === spinEvent.id) return
-    seenSpinIdRef.current = spinEvent.id
-    const age = Math.max(0, Date.now() - new Date(spinEvent.startedAt).getTime())
-    const stillAnimating = age < 4400
-    if (!stillAnimating) {
+    if (spinId && eventAlreadySeen) return
+    if (!spinId) {
       setPendingAssignmentPlayer(null)
+      setSpinWheelIslands([])
+      setSpinning(false)
       return
     }
+    seenSpinIdRef.current = spinId
+    try { window.localStorage.setItem('mg3:last-seen-spin', spinId) } catch { /* storage may be unavailable */ }
+
+    if (!shouldAnimate) {
+      setPendingAssignmentPlayer(null)
+      setSpinWheelIslands([])
+      setSpinning(false)
+      return
+    }
+    const age = eventAge
+    const remainingDuration = Math.max(0, 4200 - age)
+    setSpinDuration(remainingDuration)
     setPendingAssignmentPlayer(spinEvent.player)
     setSpinWheelIslands((spinEvent.wheelIslands ?? []).map((name) => regions.find((region) => region.name === name)).filter(Boolean))
     setSpinning(true)
@@ -123,7 +151,7 @@ export default function IslandAssignmentRoulette() {
       revealTimers.current.push(zoomOutTimer)
     }
     setRotation(Number(spinEvent.rotation) || Number(row.rotation) || 0)
-    const finishTimer = window.setTimeout(finishSpin, Math.max(0, 4200 - age))
+    const finishTimer = window.setTimeout(finishSpin, remainingDuration)
     revealTimers.current.push(finishTimer)
   }, [])
 
@@ -136,14 +164,21 @@ export default function IslandAssignmentRoulette() {
     supabase.from('mg3_roulette_state').select('*').eq('id', true).single().then(({ data, error }) => {
       if (!alive) return
       if (error) setSharedStatus('Banco ainda não configurado. Aplique a migração SQL do projeto Supabase.')
-      else applySharedState(data)
+      else applySharedState(data, true)
     })
     const channel = supabase.channel('mg3-roulette-state')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'mg3_roulette_state' }, (payload) => {
-        if (alive) applySharedState(payload.new)
+        if (alive) applySharedState(payload.new, true)
       })
       .subscribe((status) => {
-        if (alive && status === 'CHANNEL_ERROR') setSharedStatus('Falha ao conectar ao canal de atualização em tempo real.')
+        if (!alive) return
+        if (status === 'SUBSCRIBED') {
+          supabase.from('mg3_roulette_state').select('*').eq('id', true).single().then(({ data }) => {
+            if (alive && data) applySharedState(data, true)
+          })
+        } else if (status === 'CHANNEL_ERROR') {
+          setSharedStatus('Falha ao conectar ao canal de atualização em tempo real.')
+        }
       })
     return () => {
       alive = false
@@ -170,7 +205,7 @@ export default function IslandAssignmentRoulette() {
     if (!requested.length) return setEditMessage('Digite pelo menos um nome.')
     try {
       const { state } = await callRouletteAdmin(adminKey, 'add_players', { players: requested })
-      applySharedState(state)
+      applySharedState(state, false)
       setDraft('')
       setEditMessage('Lista de jogadores atualizada para todos.')
     } catch (error) { setEditMessage(error.message) }
@@ -180,7 +215,7 @@ export default function IslandAssignmentRoulette() {
     if (!adminKey || assignedPlayers.has(player) || spinning) return
     try {
       const { state } = await callRouletteAdmin(adminKey, 'remove_player', { player })
-      applySharedState(state)
+      applySharedState(state, false)
       setEditMessage(player + ' removido da lista compartilhada.')
     } catch (error) { setEditMessage(error.message) }
   }
@@ -191,7 +226,7 @@ export default function IslandAssignmentRoulette() {
     sounds.forEach((sound) => { if (sound) { sound.pause(); sound.currentTime = 0 } })
     try {
       const { state } = await callRouletteAdmin(adminKey, 'spin')
-      applySharedState(state)
+      applySharedState(state, true)
     } catch (error) { setEditMessage(error.message) }
   }
 
@@ -203,7 +238,7 @@ export default function IslandAssignmentRoulette() {
       setSpotlightRegionId(null)
       setSpinWheelIslands([])
       setPendingAssignmentPlayer(null)
-      applySharedState(state)
+      applySharedState(state, false)
       setEditMessage('Distribuição reiniciada para todos.')
     } catch (error) { setEditMessage(error.message) }
   }
@@ -275,7 +310,7 @@ export default function IslandAssignmentRoulette() {
 
         <h3 className="roulette-title">ROLETA DE ILHAS</h3>
         <p className="assignment-instructions">Cada rodada sorteia um jogador ainda não atribuído e uma ilha com vaga.</p>
-        {displayedWheelIslands.length ? <div className="wheel-wrap assignment-wheel-wrap">
+        {displayedWheelIslands.length ? <div className={'wheel-wrap assignment-wheel-wrap' + (spinning ? ' is-spinning' : '')} style={{ '--spin-duration': spinDuration + 'ms' }}>
           <div className="pointer">▼</div>
           <div className="wheel" style={{ background: `conic-gradient(${displayedWheelIslands.map((region, index) => {
             const start = index * (360 / displayedWheelIslands.length)

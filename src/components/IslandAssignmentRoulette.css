@@ -141,6 +141,10 @@ main.main-wide .island-assignment .assignment-player-editor,
   border: 6px solid #06142e;
   outline: 3px solid #1d7cf0;
   box-shadow: 0 0 0 9px #06142e, 0 0 40px rgb(53 200 255 / 30%), inset 0 0 40px #0009;
+  transition: none;
+}
+.island-assignment .assignment-wheel-wrap.is-spinning .wheel {
+  transition: transform var(--spin-duration, 4200ms) cubic-bezier(.15, .7, .1, 1);
 }
 .island-assignment .assignment-wheel-wrap .wheel::before {
   position: absolute;
@@ -165,7 +169,10 @@ main.main-wide .island-assignment .assignment-player-editor,
 .island-assignment .assignment-wheel-wrap .wheel-island-art image {
   transform-box: fill-box;
   transform-origin: center;
-  transition: transform 4s cubic-bezier(.15, .7, .1, 1);
+  transition: none;
+}
+.island-assignment .assignment-wheel-wrap.is-spinning .wheel-island-art image {
+  transition: transform var(--spin-duration, 4200ms) cubic-bezier(.15, .7, .1, 1);
 }
 .island-assignment .assignment-wheel-wrap .wheel::after {
   position: absolute;
@@ -205,8 +212,11 @@ main.main-wide .island-assignment .assignment-player-editor,
   display: grid;
   justify-items: center;
   white-space: nowrap;
-  transition: transform 4s cubic-bezier(.15, .7, .1, 1);
+  transition: none;
   transform-origin: center;
+}
+.island-assignment .assignment-wheel-wrap.is-spinning .wheel-label-text {
+  transition: transform var(--spin-duration, 4200ms) cubic-bezier(.15, .7, .1, 1);
 }
 .island-assignment .wheel-label-text > span { display: block; }
 
