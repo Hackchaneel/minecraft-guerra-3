@@ -131,13 +131,24 @@ main.main-wide .island-assignment .assignment-player-editor,
   text-align: center;
 }
 .island-assignment .assignment-wheel-wrap {
+  position: relative;
   width: min(520px, 84vw);
   margin: .15rem auto .4rem;
-  filter: drop-shadow(0 0 30px rgb(40 120 255 / 45%));
+  isolation: isolate;
   container-type: inline-size;
+}
+.island-assignment .assignment-wheel-wrap::before {
+  position: absolute;
+  inset: -3%;
+  z-index: 0;
+  border-radius: 50%;
+  box-shadow: 0 0 30px 8px rgb(40 120 255 / 45%);
+  content: '';
+  pointer-events: none;
 }
 .island-assignment .assignment-wheel-wrap .wheel {
   overflow: visible;
+  z-index: 1;
   border: 6px solid #06142e;
   outline: 3px solid #1d7cf0;
   box-shadow: 0 0 0 9px #06142e, 0 0 40px rgb(53 200 255 / 30%), inset 0 0 40px #0009;
@@ -145,6 +156,7 @@ main.main-wide .island-assignment .assignment-player-editor,
 }
 .island-assignment .assignment-wheel-wrap.is-spinning .wheel {
   transition: transform var(--spin-duration, 4200ms) cubic-bezier(.15, .7, .1, 1);
+  will-change: transform;
 }
 .island-assignment .assignment-wheel-wrap .wheel::before {
   position: absolute;
