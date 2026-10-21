@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
 import Section from '../components/Section.jsx'
 import MysteryCarousel from '../components/MysteryCarousel.jsx'
 import { ADMIN_KEY_STORAGE, callAdminAction, supabase } from '../lib/supabase.js'
@@ -51,7 +50,7 @@ export default function Secrets() {
   const [items, setItems] = useState(DEFAULT_SECRETS)
   const [draftItems, setDraftItems] = useState(DEFAULT_SECRETS)
   const [current, setCurrent] = useState(0)
-  const [adminKey] = useState(() => window.sessionStorage.getItem(ADMIN_KEY_STORAGE) ?? '')
+  const [adminKey, setAdminKey] = useState('')
   const [title, setTitle] = useState(DEFAULT_SECRETS[0].title)
   const [text, setText] = useState(DEFAULT_SECRETS[0].text)
   const [file, setFile] = useState(null)
@@ -69,6 +68,18 @@ export default function Secrets() {
   const previewUrl = useMemo(() => file ? URL.createObjectURL(file) : selected?.image, [file, selected?.image])
 
   useEffect(() => () => { if (file && previewUrl?.startsWith('blob:')) URL.revokeObjectURL(previewUrl) }, [file, previewUrl])
+
+  useEffect(() => {
+    let alive = true
+    const savedKey = window.sessionStorage.getItem(ADMIN_KEY_STORAGE)
+    if (!savedKey) return () => { alive = false }
+    callAdminAction(savedKey, 'verify').then(() => {
+      if (alive) setAdminKey(savedKey)
+    }).catch(() => {
+      window.sessionStorage.removeItem(ADMIN_KEY_STORAGE)
+    })
+    return () => { alive = false }
+  }, [])
 
   const applyItems = useCallback((value) => {
     const normalized = Array.isArray(value) && value.length ? value : DEFAULT_SECRETS
@@ -181,7 +192,7 @@ export default function Secrets() {
 
   return <Section title="SEGREDOS DO MG3" subtitle="Explore as revelações e pistas do mundo de baixo.">
     <div className="secrets-page">
-      <p className="secrets-sync-status" role="status">{status}{!ready && ' · sincronizando'}</p>
+      {adminKey && <p className="secrets-sync-status" role="status">{status}{!ready && ' · sincronizando'}</p>}
       {carouselItems.length > 0 && <MysteryCarousel cards={carouselItems} current={Math.min(current, carouselItems.length - 1)} onSelect={setCurrent} />}
       {adminKey ? <form className="secrets-editor" onSubmit={save}>
         <div className="secrets-editor-heading">
@@ -204,7 +215,7 @@ export default function Secrets() {
           {dirty && <button className="btn" type="button" disabled={busy} onClick={() => { setDraftItems(items); setCurrent((index) => Math.min(index, items.length - 1)); setDirty(false); setFile(null); setMessage('Edições descartadas.') }}>DESCARTAR EDIÇÕES</button>}
         </div>
         <p className="secrets-editor-message" role="status">{message}</p>
-      </form> : <div className="secrets-admin-note"><span>Quer compartilhar uma revelação?</span><Link to="/admin">Entrar como administrador MG3</Link></div>}
+      </form> : null}
     </div>
   </Section>
 }
