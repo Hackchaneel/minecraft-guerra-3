@@ -9,7 +9,7 @@ export const supabase = url && key ? createClient(url, key, {
 
 export const ADMIN_KEY_STORAGE = 'mg3:roulette-admin-key'
 
-export async function callRouletteAdmin(key, action, payload = {}) {
+export async function callAdminAction(key, action, payload = {}) {
   if (!supabase) throw new Error('Supabase não está configurado neste site.')
   const { data, error } = await supabase.functions.invoke('roulette-admin', {
     body: { action, payload },
@@ -25,4 +25,8 @@ export async function callRouletteAdmin(key, action, payload = {}) {
   }
   if (data?.error) throw new Error(data.error)
   return data
+}
+
+export async function callRouletteAdmin(key, action, payload = {}) {
+  return callAdminAction(key, action, payload)
 }

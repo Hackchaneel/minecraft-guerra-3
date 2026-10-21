@@ -9,6 +9,7 @@ import Rules from './pages/Rules.jsx'
 import RoulettePage from './pages/RoulettePage.jsx'
 import Team from './pages/Team.jsx'
 import AdminLogin from './pages/AdminLogin.jsx'
+import Secrets from './pages/Secrets.jsx'
 export default function App() {
   const { pathname } = useLocation()
   useEffect(() => {
@@ -22,7 +23,7 @@ export default function App() {
         <img className="home-ship home-ship-right" src="./galeao-pirata-ondas-azuis.png" alt="" draggable="false" />
       </div>
     </div>}
-    <main className={pathname === '/roleta' ? 'main-wide' : pathname === '/historia' ? 'main-story' : pathname === '/como-funciona' ? 'main-how' : undefined}>
+    <main className={pathname === '/roleta' || pathname === '/segredos' ? 'main-wide' : pathname === '/historia' ? 'main-story' : pathname === '/como-funciona' ? 'main-how' : undefined}>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/mundo" element={<World />} />
@@ -32,6 +33,7 @@ export default function App() {
         <Route path="/roleta" element={<RoulettePage />} />
         <Route path="/colaboradores" element={<Team />} />
         <Route path="/admin" element={<AdminLogin />} />
+        <Route path="/segredos" element={<Secrets />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </main>

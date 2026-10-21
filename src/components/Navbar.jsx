@@ -10,6 +10,7 @@ const links = [
   ['/regras', 'REGRAS', '⚑'],
   ['/roleta', 'ROLETA', '◌'],
   ['/colaboradores', 'COLABORADORES', '♟'],
+  ['/segredos', 'SEGREDOS', '✧'],
 ]
 
 export default function Navbar() {

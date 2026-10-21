@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import ParallaxHeroImages from '../components/ParallaxHeroImages.jsx'
-import MysteryCarousel from '../components/MysteryCarousel.jsx'
 import { parallaxImages, parallaxCopy } from '../data/parallax.js'
 import './HomeLobby.css'
+import '../pages/Secrets.css'
 
 function ShortcutIcon({ type }) {
   const paths = {
@@ -70,13 +70,11 @@ export default function Home() {
             </button>}
         </div>
       </section>
-      <section className="mystery-section" aria-labelledby="mystery-heading">
-        <div className="mystery-heading">
-          <h2 id="mystery-heading">SEGREDOS DO MG3</h2>
-          <p className="sub">Algumas revelações ainda estão por vir.</p>
-        </div>
-        <MysteryCarousel />
-      </section>
+      <Link className="secrets-home-link" to="/segredos">
+        <strong>SEGREDOS DO MG3</strong>
+        <span>Explore as revelações e pistas do mundo de baixo.</span>
+        <strong aria-hidden="true">ABRIR →</strong>
+      </Link>
     </div></div>)
 }
 
