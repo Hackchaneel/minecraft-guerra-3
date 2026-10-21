@@ -130,7 +130,8 @@ export default function IslandAssignmentRoulette() {
     })
     if (isLastPlayerSpin && lastPlayerSound) {
       lastPlayerSound.volume = 0.85
-      lastPlayerSound.play().catch(() => {})
+      const delayedLastSound = window.setTimeout(() => lastPlayerSound.play().catch(() => {}), 2000)
+      revealTimers.current.push(delayedLastSound)
     }
     setSpinning(true)
     setResult(null)
