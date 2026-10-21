@@ -73,6 +73,7 @@ export default function IslandAssignmentRoulette() {
   const [spotlightRegionId, setSpotlightRegionId] = useState(null)
   const mapSectionRef = useRef(null)
   const panelRef = useRef(null)
+  const selectionSoundRef = useRef(null)
   const revealTimers = useRef([])
 
   useEffect(() => () => revealTimers.current.forEach((timer) => window.clearTimeout(timer)), [])
@@ -117,6 +118,13 @@ export default function IslandAssignmentRoulette() {
     const islandIndex = pickIndex(availableIslands.length)
     const chosenIsland = availableIslands[islandIndex]
     const wheelIndex = wheelIslands.findIndex((region) => region.id === chosenIsland.id)
+    const sound = selectionSoundRef.current
+    if (sound) {
+      sound.pause()
+      sound.currentTime = 0
+      sound.volume = 0.85
+      sound.play().catch(() => {})
+    }
     setSpinning(true)
     setResult(null)
     setRotation(nextRotation(rotation, wheelIndex, wheelIslands.length))
@@ -149,6 +157,7 @@ export default function IslandAssignmentRoulette() {
 
   return (
     <div className="island-assignment">
+      <audio ref={selectionSoundRef} src="/roulette-selection.mp3" preload="auto" hidden />
       {result && createPortal(<div className="assignment-player-reveal" role="status" aria-live="assertive"><span>{result.player}</span></div>, document.body)}
       <section ref={mapSectionRef} className="assignment-map-section" aria-label="Mapa e distribuição de jogadores">
         <div className="assignment-map-viewport">
