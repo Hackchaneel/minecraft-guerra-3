@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Section from '../components/Section.jsx'
-import { ADMIN_KEY_STORAGE, callRouletteAdmin } from '../lib/supabase.js'
+import { ADMIN_KEY_STORAGE, callRouletteAdmin, setActiveAdminKey } from '../lib/supabase.js'
 
 export default function AdminLogin() {
   const [key, setKey] = useState(() => window.sessionStorage.getItem(ADMIN_KEY_STORAGE) ?? '')
@@ -16,10 +16,12 @@ export default function AdminLogin() {
     try {
       await callRouletteAdmin(key, 'verify')
       window.sessionStorage.setItem(ADMIN_KEY_STORAGE, key)
+      setActiveAdminKey(key)
       setLoggedIn(true)
       setMessage('Acesso de administrador liberado nesta aba do navegador.')
     } catch (error) {
       window.sessionStorage.removeItem(ADMIN_KEY_STORAGE)
+      setActiveAdminKey('')
       setLoggedIn(false)
       setMessage(error.message || 'Não foi possível validar a chave.')
     } finally { setBusy(false) }
@@ -27,6 +29,7 @@ export default function AdminLogin() {
 
   const logout = () => {
     window.sessionStorage.removeItem(ADMIN_KEY_STORAGE)
+    setActiveAdminKey('')
     setKey('')
     setLoggedIn(false)
     setMessage('Sessão de administrador encerrada.')

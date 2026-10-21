@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Section from '../components/Section.jsx'
 import MysteryCarousel from '../components/MysteryCarousel.jsx'
-import { ADMIN_KEY_STORAGE, callAdminAction, supabase } from '../lib/supabase.js'
+import { ADMIN_KEY_STORAGE, callAdminAction, getActiveAdminKey, setActiveAdminKey, supabase } from '../lib/supabase.js'
 import './Secrets.css'
 
 const DEFAULT_SECRETS = Array.from({ length: 5 }, (_, index) => ({
@@ -71,12 +71,13 @@ export default function Secrets() {
 
   useEffect(() => {
     let alive = true
-    const savedKey = window.sessionStorage.getItem(ADMIN_KEY_STORAGE)
-    if (!savedKey) return () => { alive = false }
-    callAdminAction(savedKey, 'verify').then(() => {
-      if (alive) setAdminKey(savedKey)
+    const activeKey = getActiveAdminKey()
+    if (!activeKey) return () => { alive = false }
+    callAdminAction(activeKey, 'verify').then(() => {
+      if (alive) setAdminKey(activeKey)
     }).catch(() => {
       window.sessionStorage.removeItem(ADMIN_KEY_STORAGE)
+      setActiveAdminKey('')
     })
     return () => { alive = false }
   }, [])
