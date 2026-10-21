@@ -49,7 +49,6 @@ function rouletteSlicePath(index, count, radius = 235) {
 export default function IslandAssignmentRoulette() {
   const [players, setPlayers] = useState(defaultPlayers)
   const [assignments, setAssignments] = useState([])
-  const [history, setHistory] = useState([])
   const [draft, setDraft] = useState('')
   const [editMessage, setEditMessage] = useState('')
   const [rotation, setRotation] = useState(0)
@@ -59,6 +58,7 @@ export default function IslandAssignmentRoulette() {
   const [adminKey] = useState(() => window.sessionStorage.getItem(ADMIN_KEY_STORAGE) ?? '')
   const [sharedStatus, setSharedStatus] = useState('Conectando à roleta compartilhada…')
   const [spinWheelIslands, setSpinWheelIslands] = useState([])
+  const [pendingAssignmentPlayer, setPendingAssignmentPlayer] = useState(null)
   const mapSectionRef = useRef(null)
   const panelRef = useRef(null)
   const selectionSoundRef = useRef(null)
@@ -74,7 +74,6 @@ export default function IslandAssignmentRoulette() {
     const nextAssignments = Array.isArray(row.assignments) ? row.assignments : []
     setPlayers(nextPlayers)
     setAssignments(nextAssignments)
-    setHistory([...nextAssignments].reverse().map((assignment) => ({ player: assignment.player, island: assignment.island })))
     setRotation(Number(row.rotation) || 0)
     setSharedStatus('Roleta sincronizada em tempo real.')
 
@@ -83,7 +82,11 @@ export default function IslandAssignmentRoulette() {
     seenSpinIdRef.current = spinEvent.id
     const age = Math.max(0, Date.now() - new Date(spinEvent.startedAt).getTime())
     const stillAnimating = age < 4400
-    if (!stillAnimating) return
+    if (!stillAnimating) {
+      setPendingAssignmentPlayer(null)
+      return
+    }
+    setPendingAssignmentPlayer(spinEvent.player)
     setSpinWheelIslands((spinEvent.wheelIslands ?? []).map((name) => regions.find((region) => region.name === name)).filter(Boolean))
     setSpinning(true)
     setResult(null)
@@ -106,6 +109,7 @@ export default function IslandAssignmentRoulette() {
       }
       setSpinning(false)
       setSpinWheelIslands([])
+      setPendingAssignmentPlayer(null)
       setResult({ player: spinEvent.player, island: spinEvent.island })
       setSpotlightRegionId(spinEvent.regionId)
       const resultTimer = window.setTimeout(() => setResult(null), 1800)
@@ -148,8 +152,12 @@ export default function IslandAssignmentRoulette() {
   }, [applySharedState])
 
   const assignedPlayers = new Set(assignments.map((assignment) => assignment.player))
-  const remainingPlayers = players.filter((player) => !assignedPlayers.has(player))
-  const islandCounts = new Map(regions.map((region) => [region.id, assignments.filter((assignment) => assignment.regionId === region.id).length]))
+  const visibleAssignments = pendingAssignmentPlayer
+    ? assignments.filter((assignment) => assignment.player !== pendingAssignmentPlayer)
+    : assignments
+  const visibleAssignedPlayers = new Set(visibleAssignments.map((assignment) => assignment.player))
+  const remainingPlayers = players.filter((player) => !visibleAssignedPlayers.has(player))
+  const islandCounts = new Map(regions.map((region) => [region.id, visibleAssignments.filter((assignment) => assignment.regionId === region.id).length]))
   const availableIslands = islands.map((name) => regions.find((region) => region.name === name)).filter((region) => region && islandCounts.get(region.id) < 2)
   const wheelIslands = [...availableIslands].sort((a, b) => ROULETTE_ORDER.indexOf(a.name) - ROULETTE_ORDER.indexOf(b.name))
   const finished = !remainingPlayers.length || !availableIslands.length
@@ -194,6 +202,7 @@ export default function IslandAssignmentRoulette() {
       setResult(null)
       setSpotlightRegionId(null)
       setSpinWheelIslands([])
+      setPendingAssignmentPlayer(null)
       applySharedState(state)
       setEditMessage('Distribuição reiniciada para todos.')
     } catch (error) { setEditMessage(error.message) }
@@ -217,7 +226,7 @@ export default function IslandAssignmentRoulette() {
           >
           <img src="./mapa-roleta.png" alt="Mapa do Arquipélago Voxel com os nomes das ilhas" draggable="false" />
           {regions.map((region) => {
-            const playersOnIsland = assignments.filter((assignment) => assignment.regionId === region.id)
+            const playersOnIsland = visibleAssignments.filter((assignment) => assignment.regionId === region.id)
             return playersOnIsland.map((assignment, index) => {
               const dx = playersOnIsland.length > 1 ? (index === 0 ? -3.3 : 3.3) : 0
               const dy = playersOnIsland.length > 1 ? (index === 0 ? -4.6 : 4.6) : 0
@@ -235,7 +244,7 @@ export default function IslandAssignmentRoulette() {
           </div>
         </div>
         <div className="assignment-summary">
-          <span><b>{assignments.length}</b> jogador(es) distribuído(s) de <b>{players.length}</b></span>
+          <span><b>{visibleAssignments.length}</b> jogador(es) distribuído(s) de <b>{players.length}</b></span>
           <span><b>{availableIslands.length}</b> ilha(s) com vaga · máximo de 2 por ilha</span>
         </div>
       </section>
@@ -253,7 +262,7 @@ export default function IslandAssignmentRoulette() {
           </form>
           <div className="player-list" aria-label="Lista de jogadores">
             {players.map((player) => {
-              const assigned = assignedPlayers.has(player)
+              const assigned = visibleAssignedPlayers.has(player)
               return <span className={'player-chip ' + (assigned ? 'is-assigned' : '')} key={player} style={assigned ? { '--pin-color': colorFor(assignments.find((entry) => entry.player === player)) } : undefined}>
                 {player}{assigned && <small>ATRIBUÍDO</small>}
                 {!assigned && adminKey && <button type="button" aria-label={'Remover ' + player} title={'Remover ' + player} onClick={() => removePlayer(player)} disabled={spinning || Boolean(spotlightRegionId)}>×</button>}
@@ -307,7 +316,7 @@ export default function IslandAssignmentRoulette() {
           <button className="btn" type="button" onClick={reset} disabled={!adminKey || spinning || Boolean(spotlightRegionId) || !assignments.length}>RESETAR DISTRIBUIÇÃO</button>
         </div>
         <p className="assignment-live" aria-live="polite">{!players.length ? 'Adicione jogadores para começar.' : finished ? (remainingPlayers.length ? 'Não há mais vagas disponíveis nas ilhas.' : 'Todos os jogadores foram distribuídos.') : 'Há ' + remainingPlayers.length + ' jogador(es) e ' + availableIslands.length + ' ilha(s) disponíveis.'}</p>
-        <div className="history card assignment-history"><b>Distribuição</b>{history.length ? <ol>{history.map((entry, index) => <li key={entry.player + index} style={{ '--pin-color': colorFor(assignments[assignments.length - 1 - index]) }}><span>{entry.player} → {entry.island}</span></li>)}</ol> : <p className="sub">Nenhum jogador sorteado ainda.</p>}</div>
+        <div className="history card assignment-history"><b>Distribuição</b>{visibleAssignments.length ? <ol>{[...visibleAssignments].reverse().map((entry, index) => <li key={entry.player + index} style={{ '--pin-color': colorFor(visibleAssignments[visibleAssignments.length - 1 - index]) }}><span>{entry.player} → {entry.island}</span></li>)}</ol> : <p className="sub">Nenhum jogador sorteado ainda.</p>}</div>
       </section>
     </div>
   )
