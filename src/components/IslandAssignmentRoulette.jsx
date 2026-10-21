@@ -118,17 +118,17 @@ export default function IslandAssignmentRoulette() {
     const islandIndex = pickIndex(availableIslands.length)
     const chosenIsland = availableIslands[islandIndex]
     const wheelIndex = wheelIslands.findIndex((region) => region.id === chosenIsland.id)
-    const sound = selectionSoundRef.current
-    if (sound) {
-      sound.pause()
-      sound.currentTime = 0
-      sound.volume = 0.85
-      sound.play().catch(() => {})
-    }
     setSpinning(true)
     setResult(null)
     setRotation(nextRotation(rotation, wheelIndex, wheelIslands.length))
     window.setTimeout(() => {
+      const sound = selectionSoundRef.current
+      if (sound) {
+        sound.pause()
+        sound.currentTime = 0
+        sound.volume = 0.85
+        sound.play().catch(() => {})
+      }
       setAssignments((current) => [...current, { player: chosenPlayer, regionId: chosenIsland.id, colorIndex: current.length }])
       setHistory((entries) => [{ player: chosenPlayer, island: chosenIsland.name }, ...entries])
       setResult({ player: chosenPlayer, island: chosenIsland.name })
