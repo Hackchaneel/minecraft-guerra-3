@@ -74,6 +74,7 @@ export default function IslandAssignmentRoulette() {
   const mapSectionRef = useRef(null)
   const panelRef = useRef(null)
   const selectionSoundRef = useRef(null)
+  const lastPlayerSoundRef = useRef(null)
   const revealTimers = useRef([])
 
   useEffect(() => () => revealTimers.current.forEach((timer) => window.clearTimeout(timer)), [])
@@ -118,12 +119,25 @@ export default function IslandAssignmentRoulette() {
     const islandIndex = pickIndex(availableIslands.length)
     const chosenIsland = availableIslands[islandIndex]
     const wheelIndex = wheelIslands.findIndex((region) => region.id === chosenIsland.id)
+    const isLastPlayerSpin = remainingPlayers.length === 1
+    const selectionSound = selectionSoundRef.current
+    const lastPlayerSound = lastPlayerSoundRef.current
+    const sounds = [selectionSound, lastPlayerSound]
+    sounds.forEach((sound) => {
+      if (!sound) return
+      sound.pause()
+      sound.currentTime = 0
+    })
+    if (isLastPlayerSpin && lastPlayerSound) {
+      lastPlayerSound.volume = 0.85
+      lastPlayerSound.play().catch(() => {})
+    }
     setSpinning(true)
     setResult(null)
     setRotation(nextRotation(rotation, wheelIndex, wheelIslands.length))
     window.setTimeout(() => {
       const sound = selectionSoundRef.current
-      if (sound) {
+      if (!isLastPlayerSpin && sound) {
         sound.pause()
         sound.currentTime = 0
         sound.volume = 0.85
@@ -158,6 +172,7 @@ export default function IslandAssignmentRoulette() {
   return (
     <div className="island-assignment">
       <audio ref={selectionSoundRef} src="/roulette-selection.mp3" preload="auto" hidden />
+      <audio ref={lastPlayerSoundRef} src="/roulette-last-player.mp3" preload="auto" hidden />
       {result && createPortal(<div className="assignment-player-reveal" role="status" aria-live="assertive"><span>{result.player}</span></div>, document.body)}
       <section ref={mapSectionRef} className="assignment-map-section" aria-label="Mapa e distribuição de jogadores">
         <div className="assignment-map-viewport">
