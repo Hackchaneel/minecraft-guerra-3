@@ -23,6 +23,7 @@ export default function Home() {
         <span>Capítulos novos da História Disponíveis!!</span>
         <strong>LER AGORA <span aria-hidden="true">→</span></strong>
       </Link>
+      <Link className="mg3-admin-home-link" to="/admin">Login Administrador MG3</Link>
       <section className="lobby-frame" aria-label="Lobby Minecraft Guerra 3">
         <div className="lobby-art" role="img" aria-label="Imagem principal do Minecraft Guerra 3">
           <span>A guerra está prestes a começar.</span>

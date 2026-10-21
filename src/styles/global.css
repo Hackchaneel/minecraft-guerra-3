@@ -20,6 +20,8 @@ main{position:relative;max-width:1100px;margin:0 auto;padding:0 1rem}
 .btn:hover:not(:disabled){box-shadow:0 0 18px var(--ice);transform:translateY(-2px)}
 .btn.primary{background:var(--fire);border-color:var(--fire);color:#150800}.btn.primary:hover:not(:disabled){box-shadow:0 0 18px var(--fire)}
 .btn:disabled{opacity:.5;cursor:not-allowed}
+.mg3-admin-login{display:grid;gap:12px;max-width:560px;margin:0 auto;padding:24px}.mg3-admin-login label{color:var(--ice);font-weight:700}.mg3-admin-login input{width:100%;min-height:46px;padding:10px 12px;border:1px solid #2a6aa8;background:#061226;color:var(--text);font:inherit}.mg3-admin-login .row{justify-content:flex-start}.mg3-admin-login .sub{min-height:1.3em;margin:0}
+.roulette-shared-status{width:100%;margin:0;padding:8px 10px;border:1px solid #2a6aa866;background:#07162c;color:#9fc4e8;font-size:.82rem;text-align:center}
 .section{padding:3.5rem 0}.section h2{font-family:var(--mono);letter-spacing:3px;color:var(--ice);border-left:4px solid var(--fire);padding-left:.8rem}
 .sub{color:#8fa6c4}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:1rem;transition:.25s}

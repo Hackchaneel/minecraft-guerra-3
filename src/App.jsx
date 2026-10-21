@@ -8,6 +8,7 @@ import How from './pages/How.jsx'
 import Rules from './pages/Rules.jsx'
 import RoulettePage from './pages/RoulettePage.jsx'
 import Team from './pages/Team.jsx'
+import AdminLogin from './pages/AdminLogin.jsx'
 export default function App() {
   const { pathname } = useLocation()
   useEffect(() => {
@@ -30,6 +31,7 @@ export default function App() {
         <Route path="/regras" element={<Rules />} />
         <Route path="/roleta" element={<RoulettePage />} />
         <Route path="/colaboradores" element={<Team />} />
+        <Route path="/admin" element={<AdminLogin />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </main>

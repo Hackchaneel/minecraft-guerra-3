@@ -26,6 +26,8 @@
 }
 
 .story-announcement-icon { font-size: 1.35em; }
+.mg3-admin-home-link{display:inline-flex;align-self:flex-end;margin:-.5rem 0 .6rem;padding:5px 10px;border:1px solid #2a6aa8;background:#07162c;color:#9fc4e8;font:700 .68rem var(--display,'Courier New',monospace);text-decoration:none;letter-spacing:.04em;transition:color .18s,border-color .18s}
+.mg3-admin-home-link:hover,.mg3-admin-home-link:focus-visible{color:#fff;border-color:#6fd8ff;outline:none}
 .story-announcement strong { color: #7fd8ff; font-size: .72em; white-space: nowrap; }
 
 .lobby-frame {
