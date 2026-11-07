@@ -6,6 +6,17 @@ import { parallaxImages, parallaxCopy } from '../data/parallax.js'
 import './HomeLobby.css'
 import '../pages/Secrets.css'
 
+function fallbackYoutubeThumbnail(event, videoId) {
+  const image = event.currentTarget
+  const next = image.dataset.thumbnailFallback === 'sd' ? 'hqdefault' : 'sddefault'
+  if (image.dataset.thumbnailFallback === 'hq') {
+    image.hidden = true
+    return
+  }
+  image.dataset.thumbnailFallback = next === 'sddefault' ? 'sd' : 'hq'
+  image.src = `https://img.youtube.com/vi/${videoId}/${next}.jpg`
+}
+
 function ShortcutIcon({ type }) {
   const paths = {
     book: <path d="M3 4h7a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2H3zM21 4h-7a2 2 0 0 0-2 2v14a2 2 0 0 1 2-2h7z" />,
@@ -56,7 +67,7 @@ export default function Home() {
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
             /> : <button className="teaser-preview" type="button" onClick={() => setTrailerPlaying(true)} aria-label="Reproduzir Trailer Oficial Dublado do Minecraft Guerra 3">
-              <img src="https://img.youtube.com/vi/GY-TQEkxcE8/hqdefault.jpg" alt="" loading="lazy" decoding="async" />
+              <img src="https://img.youtube.com/vi/GY-TQEkxcE8/maxresdefault.jpg" alt="" loading="lazy" decoding="async" onError={(event) => fallbackYoutubeThumbnail(event, 'GY-TQEkxcE8')} />
               <span className="teaser-play-icon" aria-hidden="true">▶</span>
             </button>}
         </div>
@@ -79,7 +90,7 @@ export default function Home() {
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
             /> : <button className="teaser-preview" type="button" onClick={() => setTeaserPlaying(true)} aria-label="Reproduzir Teaser COLAPSO">
-              <img src="https://img.youtube.com/vi/eRQuVmEgX7w/hqdefault.jpg" alt="" loading="lazy" decoding="async" />
+              <img src="https://img.youtube.com/vi/eRQuVmEgX7w/maxresdefault.jpg" alt="" loading="lazy" decoding="async" onError={(event) => fallbackYoutubeThumbnail(event, 'eRQuVmEgX7w')} />
               <span className="teaser-play-icon" aria-hidden="true">▶</span>
             </button>}
         </div>
