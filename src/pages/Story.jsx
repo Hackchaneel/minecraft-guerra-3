@@ -47,6 +47,18 @@ const chapters = [
       'Erigido no centro de tudo, no topo da Ilha Principal, o Coliseu seria o campo de batalha definitivo. Ali seria decidida a disputa pela Ilha Principal e pelo trono dos vencedores. Porém, o que deveria se tornar a glória de alguns acabou sendo a queda de todos. O peso massivo do Coliseu e a sobrecarga de energia das batalhas apenas aceleraram o que já estava por vir. Os cristais não aguentaram. Como uma âncora, o Coliseu quebrou a órbita das ilhas e arrastou tudo consigo.',
       'E, junto com ele, todas as 12 ilhas caíram em direção ao mar esquecido abaixo. O impacto foi explosivo. As ilhas não apenas caíram: colidiram e se fundiram. O calor do Vulcão Infernal fundiu rochas. O Ártico e o Deserto se chocaram, criando uma cordilheira enorme. O mundo flutuante acabou, e os guerreiros caíram nas praias de um novo continente hostil, com suas memórias confusas e o oceano ao redor transformado pelos cristais em um veneno corrosivo, impróprio para contato. No fim, aqui começa a redenção de tudo e o preço a ser pago pela nossa ganância.'
     ]
+  },
+  {
+    id: 'capitulo-5',
+    label: 'Capítulo V',
+    game: 'MG3',
+    title: 'O Herói e o Novo Mundo',
+    paragraphs: [
+      'O impacto das 12 ilhas contra a superfície esquecida não gerou apenas destruição. Também rompeu selos e revelou segredos antigos que a terra guardava havia anos.',
+      'Algo não estava certo: Murilo Nunes, o grande salvador, não morreu durante o Grande Dilúvio. Ele sobreviveu.',
+      'Por anos, o homem que nos deu asas permaneceu no chão, abaixo do solo, operando a matriz que nos manteve vivos. Mas, no caos da queda, no exato momento em que as ilhas atingiram a terra, Nunes foi emboscado e capturado por alguém desconhecido. Hoje, nas ruínas do nosso mundo, o herói da humanidade vive preso como refém de uma entidade misteriosa.',
+      'Esse ser, cujo rosto ninguém viu e cujo nome foi apagado da história, agora age nas sombras, observando tudo. A missão do Minecraft Guerra 3 já não é a mesma. Não lutamos mais para evitar a queda. Como sempre aconteceu com a humanidade, agora buscamos poder e domínio sobre esse novo mundo.'
+    ]
   }
 ]
 
@@ -72,7 +84,7 @@ export default function Story() {
   return (
     <div className="story-page">
       <Section title="A HISTÓRIA" subtitle="A história do Minecraft Guerra será revelada aos poucos, capítulo por capítulo.">
-        <div className="story-release-note">📕 <span>CAPÍTULOS LIBERADOS · MG1 + MG2</span></div>
+        <div className="story-release-note">📕 <span>CAPÍTULOS LIBERADOS · MG1 + MG2 + MG3</span></div>
         <div className="story-book" aria-label="Livro da história do Minecraft Guerra 3">
           <nav className="story-book-index" aria-label="Capítulos da história">
             <h3>Capítulos</h3>
