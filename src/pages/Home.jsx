@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import ParallaxHeroImages from '../components/ParallaxHeroImages.jsx'
+import HomeAnnouncements from '../components/HomeAnnouncements.jsx'
 import { parallaxImages, parallaxCopy } from '../data/parallax.js'
 import './HomeLobby.css'
 import '../pages/Secrets.css'
@@ -16,14 +17,11 @@ function ShortcutIcon({ type }) {
 }
 
 export default function Home() {
+  const [trailerPlaying, setTrailerPlaying] = useState(false)
   const [teaserPlaying, setTeaserPlaying] = useState(false)
   return (<div className="home-page"><div className="home-content">
       <Link className="mg3-admin-home-link" to="/admin">Login Administrador MG3</Link>
-      <Link className="story-announcement" to="/historia">
-        <span className="story-announcement-icon" aria-hidden="true">📕</span>
-        <span>Capítulos novos da História Disponíveis!!</span>
-        <strong>LER AGORA <span aria-hidden="true">→</span></strong>
-      </Link>
+      <HomeAnnouncements />
       <section className="lobby-frame" aria-label="Lobby Minecraft Guerra 3">
         <div className="lobby-art" role="img" aria-label="Imagem principal do Minecraft Guerra 3">
           <span>A guerra está prestes a começar.</span>
@@ -45,6 +43,22 @@ export default function Home() {
             <Link className="lobby-shortcut" to="/roleta"><ShortcutIcon type="dice" />Roletas</Link>
             <Link className="lobby-shortcut" to="/regras"><ShortcutIcon type="rule" />Regras</Link>
           </nav>
+        </div>
+      </section>
+      <section className="teaser-section official-trailer-section" aria-labelledby="official-trailer-title">
+        <h2 id="official-trailer-title">Minecraft Guerra 3 | Trailer Oficial Dublado</h2>
+        <div className="teaser-video-frame">
+          {trailerPlaying ? <iframe
+              src="https://www.youtube-nocookie.com/embed/GY-TQEkxcE8?autoplay=1"
+              title="Minecraft Guerra 3 | Trailer Oficial Dublado"
+              loading="lazy"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            /> : <button className="teaser-preview" type="button" onClick={() => setTrailerPlaying(true)} aria-label="Reproduzir Trailer Oficial Dublado do Minecraft Guerra 3">
+              <img src="https://img.youtube.com/vi/GY-TQEkxcE8/hqdefault.jpg" alt="" loading="lazy" decoding="async" />
+              <span className="teaser-play-icon" aria-hidden="true">▶</span>
+            </button>}
         </div>
       </section>
       <section className="parallax-hero">

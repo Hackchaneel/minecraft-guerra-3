@@ -35,7 +35,7 @@ Deno.serve(async (request) => {
   let body: { action?: string; payload?: Record<string, unknown> }
   try { body = await request.json() } catch { return json({ error: 'Requisição inválida.' }, 400) }
   if (body.action === 'verify') return json({ ok: true })
-  if (!['add_players', 'remove_player', 'spin', 'reset', 'secrets_save'].includes(body.action ?? '')) return json({ error: 'Ação inválida.' }, 400)
+  if (!['add_players', 'remove_player', 'spin', 'reset', 'secrets_save', 'announcements_save'].includes(body.action ?? '')) return json({ error: 'Ação inválida.' }, 400)
 
   const supabase = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, {
     auth: { persistSession: false, autoRefreshToken: false },
@@ -91,6 +91,32 @@ Deno.serve(async (request) => {
     const retainedPaths = new Set(nextItems.map((item) => item.imagePath).filter((path): path is string => typeof path === 'string'))
     const removedPaths = previousItems.map((item) => item.imagePath).filter((path): path is string => typeof path === 'string' && !retainedPaths.has(path))
     if (removedPaths.length) await supabase.storage.from(bucket).remove(removedPaths)
+    return json({ state })
+  }
+
+  if (body.action === 'announcements_save') {
+    const requestedItems = body.payload?.items
+    if (!Array.isArray(requestedItems) || requestedItems.length > 12) {
+      return json({ error: 'Adicione no máximo 12 avisos.' }, 400)
+    }
+    const items: Record<string, string>[] = []
+    for (const entry of requestedItems) {
+      if (!entry || typeof entry !== 'object') return json({ error: 'Um dos avisos está inválido.' }, 400)
+      const raw = entry as Record<string, unknown>
+      const id = typeof raw.id === 'string' ? raw.id.slice(0, 80) : ''
+      const text = typeof raw.text === 'string' ? raw.text.trim() : ''
+      const href = typeof raw.href === 'string' ? raw.href.trim() : ''
+      const icon = typeof raw.icon === 'string' ? raw.icon.trim().slice(0, 12) : '📢'
+      const cta = typeof raw.cta === 'string' ? raw.cta.trim().slice(0, 30) : ''
+      if (!id || !text || text.length > 140 || href.length > 200 || (href && !href.startsWith('/') && !/^https:\/\//i.test(href))) {
+        return json({ error: 'Confira o texto (até 140 caracteres) e use links internos ou HTTPS.' }, 400)
+      }
+      items.push({ id, text, href, icon, cta })
+    }
+    const { data: state, error } = await supabase.from('mg3_announcements_state')
+      .upsert({ id: true, items, updated_at: new Date().toISOString() })
+      .select('*').single()
+    if (error) return json({ error: error.message }, 400)
     return json({ state })
   }
 
