@@ -63,18 +63,7 @@ const chapters = [
 ]
 
 function AnimatedParagraph({ text }) {
-  return (
-    <p aria-label={text}>
-      {Array.from(text).map((letter, index) => (
-        <span
-          className="story-letter"
-          aria-hidden="true"
-          key={`${index}-${letter}`}
-          style={{ animationDelay: `${Math.min(index * 2, 900)}ms` }}
-        >{letter}</span>
-      ))}
-    </p>
-  )
+  return <p>{text}</p>
 }
 
 export default function Story() {
