@@ -78,7 +78,7 @@ export default function IslandAssignmentRoulette() {
   const mapSectionRef = useRef(null)
   const mapViewportRef = useRef(null)
   const pinDragRef = useRef(null)
-  const panelRef = useRef(null)
+  const rouletteCenterRef = useRef(null)
   const selectionSoundRef = useRef(null)
   const lastPlayerSoundRef = useRef(null)
   const revealTimers = useRef([])
@@ -175,7 +175,7 @@ export default function IslandAssignmentRoulette() {
       mapSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
       const zoomOutTimer = window.setTimeout(() => {
         setSpotlightRegionId(null)
-        const returnTimer = window.setTimeout(() => panelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 1200)
+        const returnTimer = window.setTimeout(() => rouletteCenterRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' }), 1200)
         revealTimers.current.push(returnTimer)
       }, 3200)
       revealTimers.current.push(zoomOutTimer)
@@ -375,7 +375,7 @@ export default function IslandAssignmentRoulette() {
         </div>
       </section>
 
-      <section ref={panelRef} className="assignment-panel" aria-label="Roleta de distribuição">
+      <section className="assignment-panel" aria-label="Roleta de distribuição">
         <p className="roulette-shared-status" role="status">{sharedStatus} · {adminKey ? 'Modo administrador' : 'Somente visualização — administrador controla a roleta'}</p>
         <div className="assignment-player-editor">
           <form className="player-entry-form" onSubmit={addPlayers}>
@@ -401,7 +401,7 @@ export default function IslandAssignmentRoulette() {
 
         <h3 className="roulette-title">ROLETA DE ILHAS</h3>
         <p className="assignment-instructions">Cada rodada sorteia um jogador ainda não atribuído e uma ilha com vaga.</p>
-        {displayedWheelIslands.length ? <div className={'wheel-wrap assignment-wheel-wrap' + (spinning ? ' is-spinning' : '')} style={{ '--spin-duration': spinDuration + 'ms' }}>
+        {displayedWheelIslands.length ? <div ref={rouletteCenterRef} className={'wheel-wrap assignment-wheel-wrap' + (spinning ? ' is-spinning' : '')} style={{ '--spin-duration': spinDuration + 'ms' }}>
           <div className="pointer">▼</div>
           <div className="wheel" style={{ background: `conic-gradient(${displayedWheelIslands.map((region, index) => {
             const start = index * (360 / displayedWheelIslands.length)
@@ -435,7 +435,7 @@ export default function IslandAssignmentRoulette() {
               </span>
             })}
           </div>
-        </div> : <div className="wheel-empty">{remainingPlayers.length ? `Todas as ilhas já atingiram o limite de ${PLAYERS_PER_ISLAND} jogadores.` : 'Todos os jogadores já foram distribuídos.'}</div>}
+        </div> : <div ref={rouletteCenterRef} className="wheel-empty">{remainingPlayers.length ? `Todas as ilhas já atingiram o limite de ${PLAYERS_PER_ISLAND} jogadores.` : 'Todos os jogadores já foram distribuídos.'}</div>}
 
         <div className="controls row assignment-controls">
           <button className="btn primary" type="button" onClick={spin} disabled={!adminKey || spinning || Boolean(spotlightRegionId) || finished}>{spinning ? 'SORTEANDO...' : 'SORTEAR JOGADOR + ILHA'}</button>
