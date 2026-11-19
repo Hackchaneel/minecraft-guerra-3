@@ -36,7 +36,16 @@ const ISLAND_ART = {
   Camocim: 'camocim',
   'Maçã Radiativa': 'maca-radiativa',
 }
-const PIN_OFFSETS = [[0, -2.5], [-2.5, -1], [2.5, -1], [-2.5, 1.5], [2.5, 1.5]]
+// Slots moderadamente espaçados dentro do terreno de cada ilha.
+const ISLAND_PIN_SLOTS = {
+  'prepucio-artico': [[46, 14], [52, 14], [45, 20], [53, 21], [49, 24]],
+  'cordilheira-rachada': [[60, 17], [68, 17], [59, 29], [69, 30], [64, 33]],
+  'triatlo-infernal': [[31, 33], [42, 33], [30, 45], [43, 46], [36, 48]],
+  'ruina-dos-cristais': [[66, 43], [79, 43], [65, 55], [81, 55], [73, 60]],
+  'ilha-dos-segredos': [[52, 55], [63, 55], [50, 72], [66, 72], [58, 77]],
+  camocim: [[33, 62], [44, 66], [31, 76], [43, 79], [36, 85]],
+  'maca-radiativa': [[73, 72], [81, 74], [72, 84], [81, 86], [76, 90]],
+}
 
 function rouletteSlicePath(index, count, radius = 235) {
   const start = (-90 + index * 360 / count) * Math.PI / 180
@@ -321,9 +330,9 @@ export default function IslandAssignmentRoulette() {
           {regions.map((region) => {
             const playersOnIsland = visibleAssignments.filter((assignment) => assignment.regionId === region.id)
             return playersOnIsland.map((assignment, index) => {
-              const [dx, dy] = PIN_OFFSETS[index] ?? [0, 0]
-              const left = Number.isFinite(assignment.x) ? assignment.x : region.x + dx
-              const top = Number.isFinite(assignment.y) ? assignment.y : region.y + dy
+              const [slotX, slotY] = ISLAND_PIN_SLOTS[region.id]?.[index] ?? [region.x, region.y]
+              const left = Number.isFinite(assignment.x) ? assignment.x : slotX
+              const top = Number.isFinite(assignment.y) ? assignment.y : slotY
               const color = colorFor(assignment)
               return (
                 <span
