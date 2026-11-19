@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 import { players as defaultPlayers } from '../data/players.js'
 import { islands } from '../data/islands.js'
 import { regions } from '../data/regions.js'
-import { ADMIN_KEY_STORAGE, callRouletteAdmin, supabase } from '../lib/supabase.js'
+import { ADMIN_KEY_STORAGE, callRouletteAdmin, getActiveAdminKey, setActiveAdminKey, supabase } from '../lib/supabase.js'
 import './IslandAssignmentRoulette.css'
 
 const COLORS = ['#ff8a2b', '#56d7ff', '#b58cff', '#64e69a', '#ff5f86', '#f4d44d', '#ff9a66', '#79a9ff', '#f38cff', '#a8e063', '#ffc857', '#73e0d0', '#39c6d3', '#e6d27a']
@@ -61,7 +61,7 @@ export default function IslandAssignmentRoulette() {
   const [spinDuration, setSpinDuration] = useState(4200)
   const [result, setResult] = useState(null)
   const [spotlightRegionId, setSpotlightRegionId] = useState(null)
-  const [adminKey] = useState(() => window.sessionStorage.getItem(ADMIN_KEY_STORAGE) ?? '')
+  const [adminKey, setAdminKey] = useState('')
   const [sharedStatus, setSharedStatus] = useState('Conectando à roleta compartilhada…')
   const [spinWheelIslands, setSpinWheelIslands] = useState([])
   const [pendingAssignmentPlayer, setPendingAssignmentPlayer] = useState(null)
@@ -73,6 +73,23 @@ export default function IslandAssignmentRoulette() {
   const seenSpinIdRef = useRef(readLastSeenSpinId())
 
   useEffect(() => () => revealTimers.current.forEach((timer) => window.clearTimeout(timer)), [])
+
+  useEffect(() => {
+    let alive = true
+    const activeKey = getActiveAdminKey()
+    if (!activeKey) {
+      try { window.sessionStorage.removeItem(ADMIN_KEY_STORAGE) } catch { /* storage may be unavailable */ }
+      return () => { alive = false }
+    }
+    callRouletteAdmin(activeKey, 'verify').then(() => {
+      if (alive) setAdminKey(activeKey)
+    }).catch(() => {
+      if (alive) setAdminKey('')
+      setActiveAdminKey('')
+      try { window.sessionStorage.removeItem(ADMIN_KEY_STORAGE) } catch { /* storage may be unavailable */ }
+    })
+    return () => { alive = false }
+  }, [])
 
   const applySharedState = useCallback((row, animateSpin = true) => {
     if (!row) return
