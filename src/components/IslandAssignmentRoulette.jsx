@@ -7,6 +7,7 @@ import { ADMIN_KEY_STORAGE, callRouletteAdmin, supabase } from '../lib/supabase.
 import './IslandAssignmentRoulette.css'
 
 const COLORS = ['#ff8a2b', '#56d7ff', '#b58cff', '#64e69a', '#ff5f86', '#f4d44d', '#ff9a66', '#79a9ff', '#f38cff', '#a8e063', '#ffc857', '#73e0d0', '#39c6d3', '#e6d27a']
+const PLAYERS_PER_ISLAND = 5
 const ISLAND_COLORS = {
   'Prepúcio Ártico': '#f7f7f2',
   'Cordilheira Rachada': '#a84b13',
@@ -193,7 +194,7 @@ export default function IslandAssignmentRoulette() {
   const visibleAssignedPlayers = new Set(visibleAssignments.map((assignment) => assignment.player))
   const remainingPlayers = players.filter((player) => !visibleAssignedPlayers.has(player))
   const islandCounts = new Map(regions.map((region) => [region.id, visibleAssignments.filter((assignment) => assignment.regionId === region.id).length]))
-  const availableIslands = islands.map((name) => regions.find((region) => region.name === name)).filter((region) => region && islandCounts.get(region.id) < 2)
+  const availableIslands = islands.map((name) => regions.find((region) => region.name === name)).filter((region) => region && islandCounts.get(region.id) < PLAYERS_PER_ISLAND)
   const wheelIslands = [...availableIslands].sort((a, b) => ROULETTE_ORDER.indexOf(a.name) - ROULETTE_ORDER.indexOf(b.name))
   const finished = !remainingPlayers.length || !availableIslands.length
   const colorFor = (assignment) => COLORS[assignment.colorIndex % COLORS.length]
@@ -263,8 +264,16 @@ export default function IslandAssignmentRoulette() {
           {regions.map((region) => {
             const playersOnIsland = visibleAssignments.filter((assignment) => assignment.regionId === region.id)
             return playersOnIsland.map((assignment, index) => {
-              const dx = playersOnIsland.length > 1 ? (index === 0 ? -3.3 : 3.3) : 0
-              const dy = playersOnIsland.length > 1 ? (index === 0 ? -4.6 : 4.6) : 0
+              const offsets = playersOnIsland.length === 2
+                ? [[-3.3, -4.6], [3.3, 4.6]]
+                : playersOnIsland.length === 3
+                  ? [[-4, -4], [4, -4], [0, 5]]
+                  : playersOnIsland.length === 4
+                    ? [[-5, -4], [5, -4], [-5, 4], [5, 4]]
+                    : playersOnIsland.length === 5
+                      ? [[0, -7], [-6, -3], [6, -3], [-6, 3], [6, 7]]
+                      : [[0, 0]]
+              const [dx, dy] = offsets[index]
               const left = Math.min(98, Math.max(2, region.x + dx))
               const top = Math.min(96, Math.max(3, region.y + dy))
               const color = colorFor(assignment)
@@ -280,7 +289,7 @@ export default function IslandAssignmentRoulette() {
         </div>
         <div className="assignment-summary">
           <span><b>{visibleAssignments.length}</b> jogador(es) distribuído(s) de <b>{players.length}</b></span>
-          <span><b>{availableIslands.length}</b> ilha(s) com vaga · máximo de 2 por ilha</span>
+          <span><b>{availableIslands.length}</b> ilha(s) com vaga · máximo de {PLAYERS_PER_ISLAND} por ilha</span>
         </div>
       </section>
 
@@ -344,7 +353,7 @@ export default function IslandAssignmentRoulette() {
               </span>
             })}
           </div>
-        </div> : <div className="wheel-empty">{remainingPlayers.length ? 'Todas as ilhas já atingiram o limite de 2 jogadores.' : 'Todos os jogadores já foram distribuídos.'}</div>}
+        </div> : <div className="wheel-empty">{remainingPlayers.length ? `Todas as ilhas já atingiram o limite de ${PLAYERS_PER_ISLAND} jogadores.` : 'Todos os jogadores já foram distribuídos.'}</div>}
 
         <div className="controls row assignment-controls">
           <button className="btn primary" type="button" onClick={spin} disabled={!adminKey || spinning || Boolean(spotlightRegionId) || finished}>{spinning ? 'SORTEANDO...' : 'SORTEAR JOGADOR + ILHA'}</button>
