@@ -267,6 +267,9 @@ main>*,.home-feature>*{animation:rise .7s cubic-bezier(.2,.7,.2,1) both}
 .assignment-map.is-spotlight{transform:translate(var(--pan-x,0),var(--pan-y,0)) scale(1.6)}
 .assignment-map>img{width:100%;height:100%;display:block;object-fit:fill;user-select:none}
 .assignment-pin{position:absolute;z-index:2;display:flex;align-items:center;gap:.3rem;transform:translate(-8px,-50%);line-height:1;white-space:nowrap;pointer-events:none}
+.assignment-pin.is-draggable{z-index:5;pointer-events:auto;cursor:grab;touch-action:none;user-select:none}
+.assignment-pin.is-draggable:active{cursor:grabbing}
+.assignment-pin.is-draggable:focus-visible{outline:2px solid #fff;outline-offset:3px}
 .assignment-pin-head{position:relative;flex:0 0 auto;width:17px;height:17px;border:2px solid #fff;border-radius:50% 50% 50% 0;background:var(--pin-color);box-shadow:0 2px 8px #000c;transform:rotate(-45deg)}
 .assignment-pin-head:after{content:'';position:absolute;left:4px;top:4px;width:5px;height:5px;border-radius:50%;background:#fff}
 .assignment-pin-name{display:block;max-width:180px;padding:.22rem .38rem;border:1px solid var(--pin-color);background:#061020ed;color:#fff;font-family:var(--display);font-size:.68rem;line-height:1.1;text-shadow:1px 1px 0 #000;box-shadow:0 2px 8px #0009}

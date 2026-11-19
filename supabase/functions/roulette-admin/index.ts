@@ -35,7 +35,7 @@ Deno.serve(async (request) => {
   let body: { action?: string; payload?: Record<string, unknown> }
   try { body = await request.json() } catch { return json({ error: 'Requisição inválida.' }, 400) }
   if (body.action === 'verify') return json({ ok: true })
-  if (!['add_players', 'remove_player', 'spin', 'reset', 'secrets_save', 'announcements_save'].includes(body.action ?? '')) return json({ error: 'Ação inválida.' }, 400)
+  if (!['add_players', 'remove_player', 'move_pin', 'spin', 'reset', 'secrets_save', 'announcements_save'].includes(body.action ?? '')) return json({ error: 'Ação inválida.' }, 400)
 
   const supabase = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, {
     auth: { persistSession: false, autoRefreshToken: false },

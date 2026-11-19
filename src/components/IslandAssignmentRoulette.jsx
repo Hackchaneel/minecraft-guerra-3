@@ -66,6 +66,8 @@ export default function IslandAssignmentRoulette() {
   const [spinWheelIslands, setSpinWheelIslands] = useState([])
   const [pendingAssignmentPlayer, setPendingAssignmentPlayer] = useState(null)
   const mapSectionRef = useRef(null)
+  const mapViewportRef = useRef(null)
+  const pinDragRef = useRef(null)
   const panelRef = useRef(null)
   const selectionSoundRef = useRef(null)
   const lastPlayerSoundRef = useRef(null)
@@ -216,6 +218,43 @@ export default function IslandAssignmentRoulette() {
   const finished = !remainingPlayers.length || !availableIslands.length
   const colorFor = (assignment) => COLORS[assignment.colorIndex % COLORS.length]
 
+  const updatePinPosition = (player, x, y) => {
+    setAssignments((current) => current.map((assignment) => assignment.player === player ? { ...assignment, x, y } : assignment))
+  }
+
+  const movePinToPointer = (event, player) => {
+    const drag = pinDragRef.current
+    const viewport = mapViewportRef.current
+    if (!drag || drag.player !== player || drag.pointerId !== event.pointerId || !viewport) return null
+    const rect = viewport.getBoundingClientRect()
+    const x = Math.round(Math.max(1, Math.min(99, (event.clientX - rect.left) / rect.width * 100)) * 100) / 100
+    const y = Math.round(Math.max(1, Math.min(99, (event.clientY - rect.top) / rect.height * 100)) * 100) / 100
+    updatePinPosition(player, x, y)
+    return { x, y }
+  }
+
+  const startPinDrag = (event, player) => {
+    if (!adminKey || spinning || spotlightRegionId) return
+    event.preventDefault()
+    event.stopPropagation()
+    pinDragRef.current = { player, pointerId: event.pointerId }
+    event.currentTarget.setPointerCapture(event.pointerId)
+  }
+
+  const finishPinDrag = async (event, player) => {
+    const drag = pinDragRef.current
+    if (!drag || drag.player !== player || drag.pointerId !== event.pointerId) return
+    const position = movePinToPointer(event, player)
+    pinDragRef.current = null
+    if (!position || !adminKey) return
+    try {
+      const { state } = await callRouletteAdmin(adminKey, 'move_pin', { player, ...position })
+      applySharedState(state, false)
+    } catch (error) {
+      setEditMessage(error.message)
+    }
+  }
+
   const addPlayers = async (event) => {
     event.preventDefault()
     if (!adminKey) return setEditMessage('Entre como administrador para editar os participantes.')
@@ -269,7 +308,7 @@ export default function IslandAssignmentRoulette() {
       <audio ref={lastPlayerSoundRef} src="/roulette-last-player.mp3" preload="auto" hidden />
       {result && createPortal(<div className="assignment-player-reveal" role="status" aria-live="assertive"><span>{result.player}</span></div>, document.body)}
       <section ref={mapSectionRef} className="assignment-map-section" aria-label="Mapa e distribuição de jogadores">
-        <div className="assignment-map-viewport">
+        <div ref={mapViewportRef} className="assignment-map-viewport">
           <div
             className={'assignment-map' + (spotlightRegionId ? ' is-spotlight' : '')}
             style={spotlightRegionId ? {
@@ -281,21 +320,37 @@ export default function IslandAssignmentRoulette() {
           {regions.map((region) => {
             const playersOnIsland = visibleAssignments.filter((assignment) => assignment.regionId === region.id)
             return playersOnIsland.map((assignment, index) => {
-              const offsets = playersOnIsland.length === 2
-                ? [[-3.3, -4.6], [3.3, 4.6]]
-                : playersOnIsland.length === 3
-                  ? [[-4, -4], [4, -4], [0, 5]]
-                  : playersOnIsland.length === 4
-                    ? [[-5, -4], [5, -4], [-5, 4], [5, 4]]
-                    : playersOnIsland.length === 5
-                      ? [[0, -7], [-6, -3], [6, -3], [-6, 3], [6, 7]]
-                      : [[0, 0]]
+              const offsets = [[0, -2.5], [-2.5, -1], [2.5, -1], [-2.5, 1.5], [2.5, 1.5]]
               const [dx, dy] = offsets[index]
-              const left = Math.min(98, Math.max(2, region.x + dx))
-              const top = Math.min(96, Math.max(3, region.y + dy))
+              const left = Number.isFinite(assignment.x) ? assignment.x : Math.min(98, Math.max(2, region.x + dx))
+              const top = Number.isFinite(assignment.y) ? assignment.y : Math.min(96, Math.max(3, region.y + dy))
               const color = colorFor(assignment)
               return (
-                <span key={assignment.player} className="assignment-pin" style={{ left: left + '%', top: top + '%', '--pin-color': color }} title={assignment.player + ' — ' + region.name}>
+                <span
+                  key={assignment.player}
+                  className={'assignment-pin' + (adminKey ? ' is-draggable' : '')}
+                  style={{ left: left + '%', top: top + '%', '--pin-color': color }}
+                  title={adminKey ? assignment.player + ' — ' + region.name + ' · arraste para mover' : assignment.player + ' — ' + region.name}
+                  role={adminKey ? 'button' : undefined}
+                  tabIndex={adminKey ? 0 : undefined}
+                  aria-label={adminKey ? `Mover o pino de ${assignment.player} em ${region.name}` : undefined}
+                  onPointerDown={adminKey ? (event) => startPinDrag(event, assignment.player) : undefined}
+                  onPointerMove={adminKey ? (event) => movePinToPointer(event, assignment.player) : undefined}
+                  onPointerUp={adminKey ? (event) => finishPinDrag(event, assignment.player) : undefined}
+                  onPointerCancel={adminKey ? (event) => finishPinDrag(event, assignment.player) : undefined}
+                  onKeyDown={adminKey ? (event) => {
+                    const step = event.shiftKey ? 1 : .25
+                    if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)) return
+                    event.preventDefault()
+                    const next = {
+                      x: Math.max(1, Math.min(99, left + (event.key === 'ArrowLeft' ? -step : event.key === 'ArrowRight' ? step : 0))),
+                      y: Math.max(1, Math.min(99, top + (event.key === 'ArrowUp' ? -step : event.key === 'ArrowDown' ? step : 0))),
+                    }
+                    updatePinPosition(assignment.player, next.x, next.y)
+                    callRouletteAdmin(adminKey, 'move_pin', { player: assignment.player, x: next.x, y: next.y })
+                      .then(({ state }) => applySharedState(state, false)).catch((error) => setEditMessage(error.message))
+                  } : undefined}
+                >
                   <span className="assignment-pin-head" aria-hidden="true" />
                   <span className="assignment-pin-name">{assignment.player}</span>
                 </span>
@@ -307,6 +362,7 @@ export default function IslandAssignmentRoulette() {
         <div className="assignment-summary">
           <span><b>{visibleAssignments.length}</b> jogador(es) distribuído(s) de <b>{players.length}</b></span>
           <span><b>{availableIslands.length}</b> ilha(s) com vaga · máximo de {PLAYERS_PER_ISLAND} por ilha</span>
+          {adminKey && <span>Arraste os pinos para ajustar a posição dos jogadores no mapa.</span>}
         </div>
       </section>
 
