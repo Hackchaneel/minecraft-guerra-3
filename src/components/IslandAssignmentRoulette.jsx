@@ -7,7 +7,7 @@ import { ADMIN_KEY_STORAGE, callRouletteAdmin, getActiveAdminKey, setActiveAdmin
 import './IslandAssignmentRoulette.css'
 
 const COLORS = ['#ff8a2b', '#56d7ff', '#b58cff', '#64e69a', '#ff5f86', '#f4d44d', '#ff9a66', '#79a9ff', '#f38cff', '#a8e063', '#ffc857', '#73e0d0', '#39c6d3', '#e6d27a']
-const PLAYERS_PER_ISLAND = 5
+const PLAYERS_PER_ISLAND = 7
 const ISLAND_COLORS = {
   'Prepúcio Ártico': '#f7f7f2',
   'Cordilheira Rachada': '#a84b13',
@@ -38,13 +38,13 @@ const ISLAND_ART = {
 }
 // Slots moderadamente espaçados dentro do terreno de cada ilha.
 const ISLAND_PIN_SLOTS = {
-  'prepucio-artico': [[46, 14], [52, 14], [45, 20], [53, 21], [49, 24]],
-  'cordilheira-rachada': [[60, 17], [68, 17], [59, 29], [69, 30], [64, 33]],
-  'triatlo-infernal': [[31, 33], [42, 33], [30, 45], [43, 46], [36, 48]],
-  'ruina-dos-cristais': [[66, 43], [79, 43], [65, 55], [81, 55], [73, 60]],
-  'ilha-dos-segredos': [[52, 55], [63, 55], [50, 72], [66, 72], [58, 77]],
-  camocim: [[33, 62], [44, 66], [31, 76], [43, 79], [36, 85]],
-  'maca-radiativa': [[73, 72], [81, 74], [72, 84], [81, 86], [76, 90]],
+  'prepucio-artico': [[46, 14], [52, 14], [45, 20], [53, 21], [49, 24], [42, 27], [55, 27]],
+  'cordilheira-rachada': [[60, 17], [68, 17], [59, 29], [69, 30], [64, 33], [73, 24], [62, 27]],
+  'triatlo-infernal': [[31, 33], [42, 33], [30, 45], [43, 46], [36, 48], [35, 28], [39, 42]],
+  'ruina-dos-cristais': [[66, 43], [79, 43], [65, 55], [81, 55], [73, 60], [72, 38], [74, 50]],
+  'ilha-dos-segredos': [[52, 55], [63, 55], [50, 72], [66, 72], [58, 77], [57, 49], [60, 66]],
+  camocim: [[33, 62], [44, 66], [31, 76], [43, 79], [36, 85], [39, 56], [29, 82]],
+  'maca-radiativa': [[73, 72], [81, 74], [72, 84], [81, 86], [76, 90], [77, 70], [78, 80]],
 }
 
 function rouletteSlicePath(index, count, radius = 235) {
