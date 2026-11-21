@@ -7,7 +7,7 @@ import { ADMIN_KEY_STORAGE, callRouletteAdmin, getActiveAdminKey, setActiveAdmin
 import './IslandAssignmentRoulette.css'
 
 const COLORS = ['#ff8a2b', '#56d7ff', '#b58cff', '#64e69a', '#ff5f86', '#f4d44d', '#ff9a66', '#79a9ff', '#f38cff', '#a8e063', '#ffc857', '#73e0d0', '#39c6d3', '#e6d27a']
-const PLAYERS_PER_ISLAND = 7
+const PLAYERS_PER_ISLAND = 6
 const ISLAND_COLORS = {
   'Prepúcio Ártico': '#f7f7f2',
   'Cordilheira Rachada': '#a84b13',
